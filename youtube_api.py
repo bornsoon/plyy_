@@ -3,7 +3,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 # YouTube API 키
-API_KEY = 'AIzaSyClYLulYqkFyTNaVdqinymp8q2gqmDU1QE'
+API_KEY = ''
 
 # YouTube API 클라이언트 생성
 youtube = build('youtube', 'v3', developerKey=API_KEY)

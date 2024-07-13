@@ -1,6 +1,0 @@
-# Spotify sample.py
-cid = '4a07e98721c84fcab2458d5813965796'
-secret = '9fc833bbc4a647c8b56ddb3e952d04b4'
-
-# YouTube API 키
-API_KEY = 'AIzaSyClYLulYqkFyTNaVdqinymp8q2gqmDU1QE'

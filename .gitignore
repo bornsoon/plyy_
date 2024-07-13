@@ -15,4 +15,5 @@ __pycache__/
 # 실행파일 제외
 *.exe
 
-key.txt
+# 환경설정 파일 제외
+.env

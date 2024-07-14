@@ -1,6 +1,7 @@
 from spotipy.oauth2 import SpotifyClientCredentials
 import spotipy
-from Gen.OutputFile import  OutputDict
+from OutputFile import OutputDict
+from youtubeAPI import youtube_url
 
 cid = '4a07e98721c84fcab2458d5813965796'
 secret = '9fc833bbc4a647c8b56ddb3e952d04b4'
@@ -23,8 +24,9 @@ def songToCsv(playlist_id):
     song_result = []
     plyy = spotify_plyy_src(playlist_id)
     for i in plyy:
-        song_result.append({'Id': 'song_'+ i['Id'], 'Vidoe': '', 'PlyyId': playlist_id, 'SrcId': i['Id']})
-    return song_result
+        video = youtube_url(i['Title'] + i['Artist'])
+        song_result.append({'Id': 'song_'+ i['Id'], 'Vidoe': 'video', 'PlyyId': playlist_id, 'SrcId': i['Id']})
+    OutputDict(plyy, 'song_' + playlist_id + '.csv')
 
 
 def srcToCsv(playlist_id):
@@ -43,5 +45,5 @@ if __name__=='__main__':
                    '37i9dQZF1DX5LEXW9eXA0n',
                    '37i9dQZF1DX2ohL85TE8TI']
     for i in playlist_id:
-        srcToCsv(i)
+        # srcToCsv(i)
         songToCsv(i)

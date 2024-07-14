@@ -1,6 +1,6 @@
 from spotipy.oauth2 import SpotifyClientCredentials
 import spotipy
-from OutputFile import OutputFile, OutputDict
+from Gen.OutputFile import OutputFile, OutputDict
 
 cid = '4a07e98721c84fcab2458d5813965796'
 secret = '9fc833bbc4a647c8b56ddb3e952d04b4'

@@ -2,7 +2,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 # Youtube API 키 설정
-API_KEY = 'AIzaSyClYLulYqkFyTNaVdqinymp8q2gqmDU1QE'
+API_KEY = ''
 
 
 def youtube_url(search_query):
@@ -27,3 +27,6 @@ def youtube_url(search_query):
 
     except HttpError as e:
         print('YouTube API 호출 오류 발생:', e)
+
+    except IndexError:
+        video_id = ''

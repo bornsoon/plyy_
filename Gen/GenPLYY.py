@@ -1,10 +1,11 @@
 from spotipy.oauth2 import SpotifyClientCredentials
-import spotipy
 from OutputFile import OutputDict
 from youtubeAPI import youtube_url
+import uuid
+import spotipy
 
-cid = '4a07e98721c84fcab2458d5813965796'
-secret = '9fc833bbc4a647c8b56ddb3e952d04b4'
+cid = ''
+secret = ''
 client_credentials_manager = SpotifyClientCredentials(client_id=cid, client_secret=secret)
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager, language='ko')
 
@@ -20,18 +21,19 @@ def spotify_plyy_src(playlist_id):
     return plyy_result
 
 
+def srcToCsv(playlist_id):
+    plyy = spotify_plyy_src(playlist_id)
+    OutputDict(plyy, 'plyy_' + playlist_id + '.csv')
+
+
 def songToCsv(playlist_id):
     song_result = []
     plyy = spotify_plyy_src(playlist_id)
     for i in plyy:
-        video = youtube_url(i['Title'] + i['Artist'])
-        song_result.append({'Id': 'song_'+ i['Id'], 'Vidoe': 'video', 'PlyyId': playlist_id, 'SrcId': i['Id']})
-    OutputDict(plyy, 'song_' + playlist_id + '.csv')
-
-
-def srcToCsv(playlist_id):
-    plyy = spotify_plyy_src(playlist_id)
-    OutputDict(plyy, 'plyy_' + playlist_id + '.csv')
+        id = str(uuid.uuid4())
+        # video = youtube_url(i['Title'] + i['Artist'])
+        song_result.append({'Id': 'song_'+ id, 'Comment': '', 'Vidoe': '', 'PlyyId': playlist_id, 'SrcId': i['Id']})
+    OutputDict(song_result, 'song_' + playlist_id + '.csv')
     
 
 if __name__=='__main__':

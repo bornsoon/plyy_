@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS "SRC"(
 );
 CREATE TABLE IF NOT EXISTS "SONG"(
     "Id" TEXT PRIMARY KEY,
-    "Comment",
+    "Comment" TEXT,
     "Video" TEXT,
     "PlyyId" TEXT NOT NULL,
     "SrcId" TEXT NOT NULL,

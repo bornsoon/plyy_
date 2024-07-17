@@ -1,9 +1,15 @@
 from spotipy.oauth2 import SpotifyClientCredentials
 import spotipy
 from Gen.OutputFile import OutputFile, OutputDict
+from dotenv import load_dotenv
+import os
 
-cid = '4a07e98721c84fcab2458d5813965796'
-secret = '9fc833bbc4a647c8b56ddb3e952d04b4'
+load_dotenv()
+
+OWM_API_KEY = os.getenv('OPENWEATHERMAP_API_KEY')
+
+cid = os.getenv('SPOTIFY_CID')
+secret = os.getenv('SPOTIFY_SECRET')
 client_credentials_manager = SpotifyClientCredentials(client_id=cid, client_secret=secret)
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager, language='ko')
 
@@ -15,8 +21,9 @@ def track(artist, title):
     artist = ','.join([art['name'] for art in rslt['artists']])
     srcTitle = rslt['name']
     srcId = rslt['id']
+    
 
-    src = {'Id': srcId, 'Title': srcTitle, 'Artist': artist, 'Album': albumTitle, 'AlbumImg': albumImg}
+    src = {'Id': srcId, 'Title': srcTitle, 'Artist': artist, 'Album': albumTitle, 'AlbumImg': albumImg, 'rTime': rTime}
 
     return src
 

@@ -1,9 +1,15 @@
 from spotipy.oauth2 import SpotifyClientCredentials
 import spotipy
 from Gen.OutputFile import OutputFile, OutputDict
+from dotenv import load_dotenv
+import os
 
-cid = '4a07e98721c84fcab2458d5813965796'
-secret = '9fc833bbc4a647c8b56ddb3e952d04b4'
+load_dotenv()
+
+OWM_API_KEY = os.getenv('OPENWEATHERMAP_API_KEY')
+
+cid = os.getenv('SPOTIFY_CID')
+secret = os.getenv('SPOTIFY_SECRET')
 client_credentials_manager = SpotifyClientCredentials(client_id=cid, client_secret=secret)
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager, language='ko')
 
@@ -38,9 +44,9 @@ def plyyToCsv(playlist_id):
     
 
 if __name__=='__main__':
-    # print(track('케이윌', '체리블라썸'))
+    print(track('케이윌', '체리블라썸'))
     # print(track('로꼬', 'say yes'))
     # print(track('펀치', 'say yes'))
     # OutputFile(str(plyy), 'spotipy_playlist_tracks.txt')
     # OutputDict(plyy, 'plyy_3DJbmbHtNW1QdonQgWtZYY.csv')
-    plyyToCsv('3DJbmbHtNW1QdonQgWtZYY')
+    # plyyToCsv('3DJbmbHtNW1QdonQgWtZYY')

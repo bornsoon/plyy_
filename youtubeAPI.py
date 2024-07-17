@@ -1,8 +1,13 @@
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-# Toutube API 키 설정
-API_KEY = ''
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+# YouTube API 키
+API_KEY = os.getenv('YOUTUBE_API_KEY')
 
 # YouTube Data API 클라이언트 빌드
 youtube = build('youtube', 'v3', developerKey=API_KEY)

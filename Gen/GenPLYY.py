@@ -3,9 +3,15 @@ from OutputFile import OutputDict
 from youtubeAPI import youtube_url
 import uuid
 import spotipy
+from dotenv import load_dotenv
+import os
 
-cid = ''
-secret = ''
+load_dotenv()
+
+OWM_API_KEY = os.getenv('OPENWEATHERMAP_API_KEY')
+
+cid = os.getenv('SPOTIFY_CID')
+secret = os.getenv('SPOTIFY_SECRET')
 client_credentials_manager = SpotifyClientCredentials(client_id=cid, client_secret=secret)
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager, language='ko')
 
@@ -32,20 +38,12 @@ def songToCsv(playlist_id):
     for i in plyy:
         id = str(uuid.uuid4())
         # video = youtube_url(i['Title'] + i['Artist'])
-        song_result.append({'Id': 'song_'+ id, 'Comment': '', 'Vidoe': '', 'PlyyId': playlist_id, 'SrcId': i['Id']})
+        song_result.append({'Id': 'song_'+ id, 'Comment': '', 'Vidoe': '', 'PlyyId': playlist_id, 'SrcId': i['Id'], 'rTime':i['duration_ms']})
     OutputDict(song_result, 'song_' + playlist_id + '.csv')
     
 
 if __name__=='__main__':
-    playlist_id = ['37i9dQZF1DWT9uTRZAYj0c',
-                   '37i9dQZF1DXbShqaetC9Tw',
-                   '37i9dQZF1DWSvk1AxYsbvo',
-                   '37i9dQZF1DWZiWafrEIdA8',
-                   '37i9dQZF1DX3NfV1mHBR08',
-                   '37i9dQZF1DWUYWXTlNjc6T',
-                   '37i9dQZF1DX5g856aiKiDS',
-                   '37i9dQZF1DX5LEXW9eXA0n',
-                   '37i9dQZF1DX2ohL85TE8TI']
+    playlist_id = ['6AhVuKi3LCJxAxO8HjnQ7L']
     for i in playlist_id:
-        # srcToCsv(i)
+        srcToCsv(i)
         songToCsv(i)

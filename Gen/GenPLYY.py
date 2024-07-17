@@ -23,7 +23,7 @@ def spotify_plyy_src(playlist_id):
         l = i['track']
         albumImg = [Img for Img in l['album']['images'] if Img['height'] == 640][0]['url']
         artist = ','.join([art['name'] for art in l['artists']])
-        plyy_result.append({'Id': l['id'], 'Title': l['name'], 'Artist': artist, 'Album': l['album']['name'], 'AlbumImg': albumImg})
+        plyy_result.append({'Id': l['id'], 'Title': l['name'], 'Artist': artist, 'Album': l['album']['name'], 'AlbumImg': albumImg, 'rTime': l['duration_ms']})
     return plyy_result
 
 
@@ -38,7 +38,7 @@ def songToCsv(playlist_id):
     for i in plyy:
         id = str(uuid.uuid4())
         # video = youtube_url(i['Title'] + i['Artist'])
-        song_result.append({'Id': 'song_'+ id, 'Comment': '', 'Vidoe': '', 'PlyyId': playlist_id, 'SrcId': i['Id'], 'rTime':i['duration_ms']})
+        song_result.append({'Id': 'song_'+ id, 'Comment': '', 'Vidoe': '', 'PlyyId': playlist_id, 'SrcId': i['Id'], 'rTime': i['rTime']})
     OutputDict(song_result, 'song_' + playlist_id + '.csv')
     
 

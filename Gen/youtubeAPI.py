@@ -1,8 +1,12 @@
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+from dotenv import load_dotenv
+import os
 
-# Youtube API 키 설정
-API_KEY = ''
+load_dotenv()
+
+# YouTube API 키
+API_KEY = os.getenv('YOUTUBE_API_KEY')
 
 
 def youtube_url(search_query):

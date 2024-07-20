@@ -5,3 +5,11 @@ INSERT INTO PLYY(plyy_uuid,plyy_title,plyy_img,plyy_cmt,c_uuid,gtag_uuid) VALUES
 
 ALTER TABLE SONG RENAME COLUMN plyy_id TO plyy_uuid;
 ALTER TABLE SONG RENAME COLUMN src_id TO src_uuid;
+ALTER TABLE SRC RENAME TO TRACK;
+ALTER TABLE TRACK RENAME COLUMN src_uuid TO track_uuid;
+ALTER TABLE TRACK RENAME COLUMN src_title TO track_title;
+ALTER TABLE TRACK RENAME COLUMN src_artist TO track_artist;
+ALTER TABLE TRACK RENAME COLUMN src_album TO track_album;
+ALTER TABLE TRACK RENAME COLUMN src_album_img TO track_album_img;
+ALTER TABLE TRACK RENAME COLUMN src_rtime TO track_rtime;
+ALTER TABLE SONG  RENAME COLUMN src_uuid TO track_uuid;

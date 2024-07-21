@@ -4,45 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PLYY</title>
+    <style>
+        li{
+            list-style-type: None;
+        }
+        #info {
+            display:flex;
+            justify-content: space-between;
+        }
+    </style>
 </head>
 <body>
-    <table border="1" id="plyy-table">
-        <tr>
-            <th>plyy_uuid</th>
-            <th>plyy_title</th>
-            <th>plyy_img</th>
-            <th>plyy_gen_date</th>
-            <th>plyy_update_date</th>
-            <th>plyy_cmt</th>
-            <th>gtag_uuid</th>
-            <th>c_uuid</th>
-        </tr>
-    </table>
+    <li id="plyyList"></li>
+    <p id="title"></p>
+    <div id="info">
+        <div>
+            <p id="date"></p>
+        </div>
+        <div id="curator"></div>
+    </div>
+    <div id="curate">
+        <p id="tag"></p>
+        <p id="comment"></p>
+    </div>
+    <table border="1" id="plyy-table"></table>
+
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchPlyy();
+        });
+
         function fetchPlyy() {
             fetch('/api/plyy')
             .then(response =>  response.json())
-            .then(data => {  // data.forEach 삭제하면   (plyy => {
-                const table = document.getElementById('plyy-table');
+            .then(data => {
+                const plyyList = document.getElementById('plyyList');
                 data.forEach(plyy => {
-                    const row = table.insertRow();
-                    row.insertCell(0).textContent = plyy.plyy_uuid;
-                    row.insertCell(1).textContent = plyy.plyy_title;
-                    row.insertCell(2).textContent = plyy.plyy_img;
-                    row.insertCell(3).textContent = plyy.plyy_gen_date;
-                    row.insertCell(4).textContent = plyy.plyy_update_date;
-                    row.insertCell(5).textContent = plyy.plyy_cmt;
-                    row.insertCell(6).textContent = plyy.c_uuid;
-                    row.insertCell(7).textContent = plyy.gtag_uuid;
+                    const newItem = document.createElement('ul')
+                    newItem.innerHTML = `<a href="/plyy/${plyy.plyy_uuid}">${plyy.plyy_title}</a>`
+                    plyyList.appendChild(newItem);
                 })
             })
             .catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
-        }
+        };
 
-        document.addEventListener('DOMContentLoaded', function() {
-            fetchPlyy();
-        })
+        function fetchPlyyDetail(id) {
+            console.log(1)
+            fetch('/api/plyy/<id>')
+            .then(response =>  response.json())
+            .then(data => {
+                const title = document.getElementById('title');
+                const date = document.getElementById('date');
+                title.innerHTML = '<H1>'+ plyy.plyy_title +'</H1>'
+                date.innerHTML = '<p>'+ plyy.generate +'</p>'
+
+            })
+            .catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
+        };
+
+        function fetchPlyyList() {
+            fetch('/api/trackList')
+            .then(response =>  response.json())
+            .then(data => {  // data.forEach 삭제하면   (plyy => {
+                const title = document.getElementById('title');
+                data.forEach(plyy => {
+                    title.innerHTML = '<H1>plyy.plyy_title</H1>'
+                    const row = table.insertRow();
+                    row.insertCell(0).textContent = plyy.plyy_uuid;
+                })
+            })
+            .catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
+        };
     </script>
 </body>
 </html>

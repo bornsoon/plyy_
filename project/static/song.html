@@ -1,0 +1,57 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="../../static/css/base.css"/>
+</head>
+<body>
+    <div class="container">
+    <iframe id="video" width=100%></iframe>
+    <div id="song">
+        <img id="image"></p>
+        <li id="info">
+            <ul id="song_title"></ul>
+            <ul id="song_artist"></ul>
+            <ul id="song_album"></ul>
+        </li>
+    </div>
+    <div class="comment"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var url = window.location.href
+            url = url.split('/')
+            let plyyId = url[url.length - 2]
+            let song_index = url[url.length - 1] - 1
+            fetchSong(plyyId, song_index);
+        });
+        
+        function fetchSong(plyyId, song_index) {
+            fetch(`/api/plyy/${plyyId}/${song_index}`)
+            .then(response =>  response.json())
+            .then(data => {
+                document.title =  data.title + ' | PLYY'
+                const video = document.getElementById('video');
+                const image = document.getElementById('image');
+                const songTitle = document.getElementById('song_title');
+                const artist = document.getElementById('song_artist');
+                const album = document.getElementById('song_album');
+                if(data.comment) {
+                    newItem = document.createElement('div')
+                    const song_comment = document.getElementById('song_comment');
+                    newItem.textContent = data.comment;
+                    song_comment.appendChild(newItem)
+                }
+                video.setAttribute('src',`${data.song_vid}`)
+                image.setAttribute('src',`${data.img}`)
+                songTitle.textContent = data.title;
+                artist.textContent = data.artist;
+                album.textoContent = data.album
+            })
+            .catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
+        };
+        </script>
+</body>
+</html>

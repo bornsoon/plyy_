@@ -1,42 +1,23 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PLYY</title>
-    <style>
-        li{
-            list-style-type: None;
-        }
-        #info {
-            display:flex;
-            justify-content: space-between;
-        }
-    </style>
+    <link rel="stylesheet" href="../static/css/base.css"/>
 </head>
 <body>
-    <li id="plyyList"></li>
-    <p id="title"></p>
-    <div id="info">
-        <div>
-            <p id="date"></p>
-        </div>
-        <div id="curator"></div>
+    <div class="container">
+        <div id="title"></div>
+        <li id="plyyList"></li>
     </div>
-    <div id="curate">
-        <p id="tag"></p>
-        <p id="comment"></p>
-    </div>
-    <table border="1" id="plyy-table"></table>
 
-
-    <script>
+    <script>        
         document.addEventListener('DOMContentLoaded', function() {
             fetchPlyy();
         });
 
         function fetchPlyy() {
-            fetch('/api/plyy')
+            fetch('/api/')
             .then(response =>  response.json())
             .then(data => {
                 const plyyList = document.getElementById('plyyList');
@@ -44,34 +25,6 @@
                     const newItem = document.createElement('ul')
                     newItem.innerHTML = `<a href="/plyy/${plyy.plyy_uuid}">${plyy.plyy_title}</a>`
                     plyyList.appendChild(newItem);
-                })
-            })
-            .catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
-        };
-
-        function fetchPlyyDetail(id) {
-            console.log(1)
-            fetch('/api/plyy/<id>')
-            .then(response =>  response.json())
-            .then(data => {
-                const title = document.getElementById('title');
-                const date = document.getElementById('date');
-                title.innerHTML = '<H1>'+ plyy.plyy_title +'</H1>'
-                date.innerHTML = '<p>'+ plyy.generate +'</p>'
-
-            })
-            .catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
-        };
-
-        function fetchPlyyList() {
-            fetch('/api/trackList')
-            .then(response =>  response.json())
-            .then(data => {  // data.forEach 삭제하면   (plyy => {
-                const title = document.getElementById('title');
-                data.forEach(plyy => {
-                    title.innerHTML = '<H1>plyy.plyy_title</H1>'
-                    const row = table.insertRow();
-                    row.insertCell(0).textContent = plyy.plyy_uuid;
                 })
             })
             .catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))

@@ -3,21 +3,20 @@
 <link rel="stylesheet" href="../../static/css/base.css"/>
 {% endblock %}
 {% block content %}
-    <div class="container">
-        <iframe id="video" width=100%></iframe>
-        <div id="info_song">
-            <img id="image">
-            <div>
-                <li id="song">
-                    <ul id="song_title"></ul>
-                    <ul id="song_artist"></ul>
-                    <ul id="song_album"></ul>
-                </li>
-            </div>
+    <iframe id="video" width=100%></iframe>
+    <div id="info_song">
+        <img id="image">
+        <div>
+            <li id="song">
+                <ul id="song_title"></ul>
+                <ul id="song_artist"></ul>
+                <ul id="song_album"></ul>
+            </li>
         </div>
-        <div class="comment" id="song_comment"></div>
     </div>
-
+    <div class="comment">
+        <div id="song_comment"></div>
+    </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var url = window.location.href
@@ -42,6 +41,7 @@
                     const song_comment = document.getElementById('song_comment');
                     newItem.textContent = data.comment;
                     song_comment.appendChild(newItem)
+                    console.log(1)
                 }
                 video.setAttribute('src',`${data.song_vid}`)
                 image.setAttribute('src',`${data.img}`)

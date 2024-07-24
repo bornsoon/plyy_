@@ -1,29 +1,67 @@
 @import "./reset.css";
-body {
+#page-container {
+    position: relative;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     background-color: black;
     color: white;
-}
-nav, footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 16px 8px 16px;
     width: 100%;
-    height: 56px;
+    min-height: 100vh;
 }
-footer {
-    background-color: #333;
+#content-wrap {
+    padding-top: 56px;
+    padding-bottom: 170px;
+    display: block;
+    justify-content: center;
+    max-width: 720rem;
+    margin-left: 16px;
+    margin-right: 16px;
 }
 .logo {
     font-size: 32px;
     line-height: 40px;
     font-weight: 700;
 }
+nav, footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+nav{
+    position: fixed;
+    background-color: #000;
+    top: 0;
+    padding: 8px 16px 8px 16px;
+    height: 56px;
+}
+footer {
+    background-color: #333;
+    position : absolute;
+    bottom: 0;
+    height: 150px;
+    padding: 30px;
+}
+#footer_info {
+    font-size: 12px;
+    line-height: 20px;
+}
+#footer_info b{
+    font-size: 12px;
+    line-height: 18px;
+    gap: 8px;
+}
+#footer_logo {
+    display: flex;
+    align-items: center;
+    width: 130px;
+    height: 40px;
+    justify-content: space-between;
+}
 #side {
-    width: 100px;
+    width: 90px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -33,13 +71,6 @@ footer {
     height: 40px;
     border-radius: 40px;
     background: white;
-}
-.container {
-    display: block;
-    justify-content: center;
-    max-width: 1080px;
-    margin-left: 16px;
-    margin-right: 16px;
 }
 li {
     list-style-type: None;
@@ -56,7 +87,7 @@ li {
     text-align: center;
     font-size: 50px;
     font-weight: 600;
-    padding-block: 20px;
+    padding-bottom: 20px;
 }
 #heart {
     display: flex;
@@ -65,9 +96,11 @@ li {
     text-align: center;
 }
 #plyy_container {
+    position: sticky;
     background-color: white;
-    padding-block: 25px;
-    margin-bottom: 30px;
+    margin-top: 56px;
+    padding-block: 20px;
+    margin-bottom: 25px;
     text-align: center;
     border-radius: 20px;
     color: black;
@@ -126,7 +159,6 @@ li {
 }
 #song_comment {
     width: 100%;
-    padding: 30px;
     margin: 0;
     background-color: white;
     color: black;

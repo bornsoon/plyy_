@@ -1,23 +1,22 @@
 import database as db
-from flask import Flask, jsonify, render_template
-
+from flask import Flask, jsonify
 app = Flask(__name__)
 
 
 @app.route('/')
 @app.route('/plyy')
 def index():
-    return render_template('index.html')
+    return app.send_static_file('index.html')
 
 
 @app.route('/plyy/<id>')
 def plyy(id):
-    return render_template('plyy.html')
+    return app.send_static_file('plyy.html')
 
 
 @app.route('/plyy/<id>/<song_index>')
 def song(id, song_index):
-    return render_template('song.html')
+    return app.send_static_file('song.html')
 
 
 @app.route('/api/')

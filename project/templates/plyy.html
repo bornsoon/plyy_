@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block style %}
+<link rel="stylesheet" href="../static/css/base.css"/>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div id="plyy_title"></div>
+        <div id="line"></div>
+        <div id="info">
+            <div>
+                <p id="date"></p>
+            </div>
+            <div>
+                <p id="curator"></p>
+                <p id="heart"></p>
+            </div>
+        </div>
+        <div id="plyy_container">
+            <div id="tag_container"></div>
+            <div id="comment" class="comment"></div>
+            <hr style="border:0px; height:4px; background:orangered; width: 100%;">
+            <li class="pointer" id="tracks"></li>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var url = window.location.href
+            url = url.split('/')
+            let plyyId = url[url.length - 1]
+            fetchPlyyDetail(plyyId);
+        });
+        
+        function fetchPlyyDetail(plyyId) {
+            fetch(`/api/plyy/${plyyId}`)
+            .then(response =>  response.json())
+            .then(data => {
+                document.title = data.info.plyy_title + ' | PLYY'
+                const plyy_title = document.getElementById('plyy_title');
+                const date = document.getElementById('date');
+                const curator = document.getElementById('curator');
+                const heart = document.getElementById('heart');
+                const tagContainer = document.getElementById('tag_container');
+                const comment = document.getElementById('comment');
+                plyy_title.textContent = data.info.plyy_title;
+                date.innerHTML = '<p>발행일 : &nbsp;&nbsp;&nbsp;' + data.info.generate + '</p>'
+                                + '<p>수정일 : &nbsp;&nbsp;&nbsp;' + data.info.update + '</p>';
+                curator.innerHTML = '<p>큐레이터 : &nbsp;&nbsp;&nbsp;' + data.info.curator + '</p>' 
+                heart.innerHTML = '&nbsp;&nbsp;' + data.info.heart+ '<img src="../static/source/heart_white.svg">';
+                comment.textContent = data.info.comment;
+                const genre = document.createElement('span');
+                genre.textContent = '#' + data.info.genre;
+                tagContainer.appendChild(genre);
+                data.tags.forEach(data => {
+                    const tag = document.createElement('span');
+                    tag.textContent = '#' + data.tag_name;
+                    tagContainer.appendChild(tag);
+                });
+                const lst = document.getElementById('tracks')
+                data.tracks.forEach(track => {
+                    const newItem = document.createElement('ul');
+                    newItem.innerHTML = `<div onclick="location.href='./${plyyId}/${parseInt(track.song_index) + 1}'">`
+                        + '<div>' + `<img src="${track.img}">` + '</div>' + '<div>' + '<b lang="ko">' + `${track.title}` + '</b>' 
+                        + '<p lang="ko">' + `${track.artist}` + '</p>' + '</div>';
+                    lst.appendChild(newItem);
+                })
+            })
+            .catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
+        };
+
+        // window.onload = function() {
+        //     let url = window.location.href
+        //     url = url.split('/')
+        //     let plyyId = url[url.length - 1]
+        //     fetchPlyyDetail(plyyId);
+        // };
+        </script>
+{% endblock %}

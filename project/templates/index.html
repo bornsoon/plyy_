@@ -1,11 +1,14 @@
 {% extends "base.html" %}
+
 {% block style %}
 <link rel="stylesheet" href="../static/css/base.css"/>
 {% endblock %}
+
 {% block content %}
-
     <li id="plyyList"></li>
+{% endblock %}
 
+{% block style %}
     <script>        
         document.addEventListener('DOMContentLoaded', function() {
             fetchPlyy();

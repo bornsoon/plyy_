@@ -1,7 +1,8 @@
-{% extends "base.html" %}
+{% extends "base_none.html" %}
 {% block style %}
 <link rel="stylesheet" href="../../static/css/base.css"/>
 {% endblock %}
+
 {% block content %}
     <iframe id="video" width=100%></iframe>
     <div id="info_song">
@@ -17,6 +18,9 @@
     <div class="comment">
         <div id="song_comment"></div>
     </div>
+{% endblock %}
+
+{% block script %}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var url = window.location.href
@@ -36,15 +40,15 @@
                 const song_title = document.getElementById('song_title');
                 const artist = document.getElementById('song_artist');
                 const album = document.getElementById('song_album');
-                if(data.comment) {
+                if (data.comment) {
                     newItem = document.createElement('div')
                     const song_comment = document.getElementById('song_comment');
                     newItem.textContent = data.comment;
                     song_comment.appendChild(newItem)
                     console.log(1)
                 }
-                video.setAttribute('src',`${data.song_vid}`)
-                image.setAttribute('src',`${data.img}`)
+                video.setAttribute('src', `${data.song_vid}`)
+                image.setAttribute('src', `${data.img}`)
                 song_title.textContent = data.title;
                 artist.textContent = data.artist;
                 album.textContent = data.album

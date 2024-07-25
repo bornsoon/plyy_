@@ -29,10 +29,16 @@ def api():
 
 @app.route('/api/plyy/<id>')
 def api_plyy_detail(id):
+    # 쿼리문의 복잡도 줄임 (줄바꿈, 인덴트)
     info_query = '''
-                 SELECT p.plyy_title, c.c_name AS curator, strftime('%Y-%m-%d', plyy_gen_date) AS generate,
+                 SELECT p.plyy_title,
+                 c.c_name AS curator, 
+                 strftime('%Y-%m-%d',
+                 plyy_gen_date) AS generate,
                  strftime('%Y-%m-%d', plyy_update_date) AS 'update', COUNT(*) AS heart, g.gtag_name AS genre, plyy_cmt AS comment  
-                 FROM PLYY p JOIN CURATOR c ON p.c_uuid=c.c_uuid JOIN PLYY_LIKE pl ON p.plyy_uuid=pl.plyy_uuid
+                 FROM PLYY p 
+                 JOIN CURATOR c 
+                 ON p.c_uuid=c.c_uuid JOIN PLYY_LIKE pl ON p.plyy_uuid=pl.plyy_uuid
                  JOIN TAG_GENRE g ON p.gtag_uuid=g.gtag_uuid WHERE p.plyy_uuid=? GROUP BY p.plyy_uuid;
                  '''
     info = db.get_query(info_query,(id,),mul=False)

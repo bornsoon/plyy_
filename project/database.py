@@ -4,6 +4,7 @@ DB = '../Gen/db/plyy.db'
 
 def connect_db():
     conn = sqlite3.connect(DB)
+    conn.execute('PRAGMA foreign_keys = ON')
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
 

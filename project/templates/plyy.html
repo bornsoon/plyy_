@@ -2,6 +2,7 @@
 {% block style %}
 <link rel="stylesheet" href="../static/css/base.css"/>
 {% endblock %}
+
 {% block content %}
     <div id="plyy_title"></div>
     <div id="line"></div>
@@ -20,7 +21,9 @@
         <hr style="border:0px; height:4px; background:orangered; width: 100%;">
         <li class="pointer" id="tracks"></li>
     </div>
+{% endblock %}
 
+{% block script %}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var url = window.location.href

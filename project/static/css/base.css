@@ -1,12 +1,14 @@
 @import "./reset.css";
 #page-container {
-    position: relative;
+    position: absolute;
     display: flex;
+    padding-top: 70px;
     flex-wrap: wrap;
     justify-content: center;
     background-color: black;
     color: white;
     width: 100%;
+    box-sizing: border-box;
     min-height: 100vh;
 }
 #content-wrap {
@@ -14,7 +16,7 @@
     padding-bottom: 170px;
     display: block;
     justify-content: center;
-    max-width: 720rem;
+    max-width: 720px;
     margin-left: 16px;
     margin-right: 16px;
 }
@@ -23,18 +25,19 @@
     line-height: 40px;
     font-weight: 700;
 }
-nav, footer {
+header, footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
     box-sizing: border-box;
 }
-nav{
+header {
     position: fixed;
     background-color: #000;
     top: 0;
     padding: 8px 16px 8px 16px;
+    max-width: 720px;
     height: 56px;
 }
 footer {

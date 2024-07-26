@@ -4,22 +4,26 @@
 {% endblock %}
 
 {% block content %}
-    <div id="plyy_title"></div>
-    <div id="line"></div>
-    <div id="info">
-        <div>
-            <p id="date"></p>
+    <div>
+        <div class="plyy_title_box">
+            <div id="plyy_title"></div>
+            <div id="line"></div>
         </div>
-        <div>
-            <p id="curator"></p>
-            <p id="heart"></p>
-        </div>
-    </div>
-    <div id="plyy_container">
-        <div id="tag_container"></div>
-        <div id="comment" class="comment"></div>
-        <hr style="border:0px; height:4px; background:orangered; width: 100%;">
-        <li class="pointer" id="tracks"></li>
+            <div id="info">
+                <div>
+                    <p id="date"></p>
+                </div>
+                <div>
+                    <p id="curator"></p>
+                    <p id="heart"></p>
+                </div>
+            </div>
+            <div class="plyy_container">
+                <div id="tag_container"></div>
+                <div id="comment" class="comment"></div>
+                <hr style="border:0px; height:4px; background:orangered; width: 100%;">
+                <li class="pointer" id="tracks"></li>
+            </div>
     </div>
 {% endblock %}
 
@@ -31,6 +35,10 @@
             let plyyId = url[url.length - 1]
             fetchPlyyDetail(plyyId);
         });
+
+        function rtime(time) {
+            time 
+        }
         
         function fetchPlyyDetail(plyyId) {
             fetch(`/api/plyy/${plyyId}`)
@@ -61,8 +69,9 @@
                 data.tracks.forEach(track => {
                     const newItem = document.createElement('ul');
                     newItem.innerHTML = `<div onclick="location.href='./${plyyId}/${parseInt(track.song_index) + 1}'">`
-                        + '<div>' + `<img src="${track.img}">` + '</div>' + '<div>' + '<b lang="ko">' + `${track.title}` + '</b>' 
-                        + '<p lang="ko">' + `${track.artist}` + '</p>' + '</div>';
+                        + '<div>' + '<div>' + `<img src="${track.img}">` + '<div>' + '<b>' + '<p lang="ko">' + `${track.title}` + '</p>' + '</b>'
+                        + '<p lang="ko">' + `${track.artist}` + '</p>' + '</div>' + '</div>'
+                        + '<div>' + `${track.track_rtime}` + '</div>' + '</div>';
                     lst.appendChild(newItem);
                 })
             })

@@ -1,25 +1,21 @@
 @import "./reset.css";
-#page-container {
+.page-container {
     position: absolute;
     display: flex;
-    padding-top: 70px;
     flex-wrap: wrap;
     justify-content: center;
+    padding-top: 70px;
+    min-height: 100vh;
+    width: 100%;
     background-color: #121212;
     color: #F5F5F5;
-    width: 100%;
     box-sizing: border-box;
-    min-height: 100vh;
     z-index: -10;
+    font-size: 12px;
+    line-height: 20px;
 }
-#content-wrap {
-    padding-top: 56px;
-    padding-bottom: 170px;
-    display: block;
-    justify-content: center;
-    max-width: 720px;
-    margin-left: 16px;
-    margin-right: 16px;
+.page_wrap {
+    width: 358px;
 }
 .logo {
     font-size: 32px;
@@ -48,10 +44,6 @@ footer {
     bottom: 0;
     height: 150px;
     padding: 30px;
-}
-#footer_info {
-    font-size: 12px;
-    line-height: 20px;
 }
 #footer_info b{
     font-size: 12px;
@@ -91,8 +83,9 @@ li {
 }
 #plyy_title {
     text-align: center;
-    font-size: 50px;
-    font-weight: 600;
+    font-size: 20px;
+    line-height: 25px;
+    font-weight: 900;
     padding-bottom: 20px;
 }
 .plyy_title_box {
@@ -100,12 +93,6 @@ li {
     top: 55px;
     padding-top: 10px;
     background-color: #121212;
-}
-#heart {
-    display: flex;
-    flex-direction: row-reverse;
-    align-items: center;
-    text-align: center;
 }
 .plyy_container {
     position: sticky;
@@ -115,19 +102,19 @@ li {
     text-align: center;
     border-radius: 20px;
     color: #121212;
-    z-index: -1;
+    z-index: 0;
 }
 #tag_container span {
     display: inline-block;
-    height: auto;
-    margin: 10px;
-    padding: 5px 10px 5px 10px;
+    height: 23px;
+    margin: 5px;
+    padding: 0px 10px 0px 10px;
     border-radius: 23px;
     border: 1.5px solid;
     box-sizing: border-box;
 }
 .comment {
-    margin: 30px;
+    margin: 10px;
     text-align: justify;
     word-break: keep-all;
     line-height: 1.7;
@@ -135,7 +122,7 @@ li {
 #tracks {
     background-color: #F5F5F5;
     color: #121212;
-    padding: 10px;
+    padding: 5px;
     line-height: 30px;
 }
 #tracks > ul > div > div {
@@ -146,14 +133,17 @@ li {
 #tracks > ul > div > div > div {
     display: flex;
     text-align: left;
+    align-items: center;
 }
 #tracks > ul {
     margin: 20px;
+    font-size: 14px;
+    line-height: 17.5px;
 }
 #tracks > ul img {
-    width: 100px;
-    height: 100px;
-    margin-right: 30px;
+    width: 60px;
+    height: 60px;
+    margin-right: 10px;
     border-radius: 10px;
 }
 #tracks > ul b {
@@ -164,7 +154,6 @@ li {
     justify-content: space-between;
     align-items: center;
     margin-block: 5px;
-    line-height: 35px;
 }
 #info_song {
     margin-block: 40px;

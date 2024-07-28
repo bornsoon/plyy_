@@ -21,9 +21,10 @@ def song(id, song_index):
 
 
 @app.route('/api/main_plyy')
-def api():
-    plyy_query = '''
-            SELECT p.plyy_uuid,
+def api_main_plyy():
+    query = '''
+            SELECT
+            p.plyy_uuid,
             p.plyy_title,
             p.plyy_img,
             c.c_name AS curator,
@@ -37,12 +38,31 @@ def api():
             JOIN TRACK t ON s.track_uuid=t.track_uuid
             GROUP BY p.plyy_uuid;
             '''
-    plyys = db.get_query(plyy_query)
+    plyys = db.get_query(query)
 
     for i in plyys:
-        i['tags'] = db.tag_query(i['plyy_uuid'])
+        i['tags'] = db.tag_query('plyy', i['plyy_uuid'])
     
-    return jsonify({'plyys':plyys})
+    return jsonify(plyys)
+
+
+@app.route('/api/main_curator')
+def api_main_curator():
+    query = '''
+            SELECT
+            c_uuid,
+            c_name,
+            c_img,
+            c_intro
+            FROM CURATOR
+            GROUP BY c_uuid;
+            '''
+    curators = db.get_query(query)
+
+    for i in curators:
+        i['tags'] = db.tag_query('curator', i['c_uuid'])
+
+    return jsonify(curators)
 
 
 @app.route('/api/plyy/<id>')
@@ -82,7 +102,7 @@ def api_plyy_detail(id):
                    '''
     tracks = db.get_query(tracks_query,(id,))
 
-    tags = db.tag_query(id)
+    tags = db.tag_query('plyy', id)
 
     return jsonify({'info': info, 'tracks': tracks, 'tags': tags})
 

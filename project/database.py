@@ -38,14 +38,25 @@ def execute_query(query, params):
     conn.commit()
     conn.close
 
-def tag_query(id):
-    query = '''
-                    SELECT
-                    t.tag_name 
-                    FROM TAG t 
-                    JOIN TAG_PLYY tp ON t.tag_uuid=tp.tag_uuid
-                    WHERE tp.plyy_uuid=?
-                    '''
+def tag_query(category, id):
+    if category.lower() == 'plyy':
+        query = '''
+                SELECT
+                t.tag_name 
+                FROM TAG t 
+                JOIN TAG_PLYY tp ON t.tag_uuid=tp.tag_uuid
+                WHERE tp.plyy_uuid=?
+                '''
+
+    elif category.lower() == 'curator':
+        query = '''
+                SELECT
+                t.tag_name
+                FROM TAG t
+                JOIN TAG_CURATOR tc ON t.tag_uuid=tc.tag_uuid
+                WHERE tc.c_uuid=?
+                '''
+        
     tags = get_query(query,(id,))
     
     return tags

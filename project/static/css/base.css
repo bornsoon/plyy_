@@ -81,10 +81,16 @@ li {
     border: #F5F5F5 solid 2px;
     border-radius: 15px;
     margin-block: 15px;
+
 }
 #mainList img + div {
+    display: block;
+    width: 320px;
     padding-left: 15px;
     padding-right: 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 #mainList img {
     width: 100%;

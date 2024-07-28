@@ -20,11 +20,29 @@ def song(id, song_index):
     return render_template('song.html')
 
 
-@app.route('/api/')
+@app.route('/api/main_plyy')
 def api():
-    query = 'SELECT plyy_uuid, plyy_title FROM PLYY'
-    data = db.get_query(query)
-    return jsonify(data)
+    plyy_query = '''
+            SELECT p.plyy_uuid,
+            p.plyy_title,
+            p.plyy_img,
+            c.c_name AS curator,
+            g.gtag_name AS genre,
+            COUNT(s.song_index) AS tracks,
+            SUM(t.track_rtime) AS times
+            FROM PLYY p
+            JOIN CURATOR c ON p.c_uuid=c.c_uuid
+            JOIN TAG_GENRE g ON p.gtag_uuid=g.gtag_uuid
+            JOIN SONG s ON p.plyy_uuid=s.plyy_uuid
+            JOIN TRACK t ON s.track_uuid=t.track_uuid
+            GROUP BY p.plyy_uuid;
+            '''
+    plyys = db.get_query(plyy_query)
+
+    for i in plyys:
+        i['tags'] = db.tag_query(i['plyy_uuid'])
+    
+    return jsonify({'plyys':plyys})
 
 
 @app.route('/api/plyy/<id>')
@@ -49,15 +67,6 @@ def api_plyy_detail(id):
     if info['update'] is None:
         info['update'] = info['generate']
 
-    tag_query = '''
-                SELECT
-                t.tag_name 
-                FROM TAG t 
-                JOIN TAG_PLYY tp ON t.tag_uuid=tp.tag_uuid
-                WHERE tp.plyy_uuid=?
-                '''
-    tags = db.get_query(tag_query,(id,))
-
     tracks_query = '''
                    SELECT t.track_uuid,
                    t.track_title AS title,
@@ -73,7 +82,9 @@ def api_plyy_detail(id):
                    '''
     tracks = db.get_query(tracks_query,(id,))
 
-    return jsonify({'info': info, 'tags': tags, 'tracks': tracks})
+    tags = db.tag_query(id)
+
+    return jsonify({'info': info, 'tracks': tracks, 'tags': tags})
 
 
 @app.route('/api/plyy/<id>/<song_index>')

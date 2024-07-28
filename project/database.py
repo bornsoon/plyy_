@@ -37,3 +37,15 @@ def execute_query(query, params):
     cur.execute(query, params)
     conn.commit()
     conn.close
+
+def tag_query(id):
+    query = '''
+                    SELECT
+                    t.tag_name 
+                    FROM TAG t 
+                    JOIN TAG_PLYY tp ON t.tag_uuid=tp.tag_uuid
+                    WHERE tp.plyy_uuid=?
+                    '''
+    tags = get_query(query,(id,))
+    
+    return tags

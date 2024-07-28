@@ -5,7 +5,12 @@
 {% endblock %}
 
 {% block content %}
-    <li id="plyyList"></li>
+    <div style="display: flex; justify-content: space-between;">
+        <button onclick="selectPlyy()">PLYY</button>
+        <button onclick="selectCurator()">CURATOR</button>
+    </div>
+    <hr style="border:0px; height:4px; background:#F15A22; width: 100%;">
+    <li id="mainList"></li>
 {% endblock %}
 
 {% block script %}
@@ -15,17 +20,56 @@
         });
 
         function fetchPlyy() {
-            fetch('/api/')
+            fetch('/api/main_plyy')
             .then(response =>  response.json())
             .then(data => {
-                const plyyList = document.getElementById('plyyList');
-                data.forEach(plyy => {
+                const plyyList = document.getElementById('mainList');
+                data.plyys.forEach(plyys => {
                     const newItem = document.createElement('ul')
-                    newItem.innerHTML = `<a href="/plyy/${plyy.plyy_uuid}">${plyy.plyy_title}</a>`
+                    tags = ''
+                    plyys.tags.forEach(tag => {
+                        tags +=  ' #' + tag.tag_name;
+                    });
+                    newItem.innerHTML = `<div onclick="location.href='./plyy/${plyys.plyy_uuid}'">` +
+                                            `<img src="./static/img/${plyys.plyy_img}">` +
+                                            '<div>' +
+                                                '<p>' + tags + '</p>' +
+                                                '<p>' + plyys.plyy_title + '</p>' +
+                                                '<div>' +
+                                                    '<p>' + plyys.curator + '</p>' +
+                                                    '<p>' + plyys.tracks + '곡 | ' + plyy_time(plyys.times) + '</p>' +
+                                                '</div>'
+                                            '</div>' +
+                                        '</div>';
+                    newItem.classList.add('pointer');
                     plyyList.appendChild(newItem);
                 })
             })
             .catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
         };
+
+        function fetchCurator() {
+            fetch('/api/main_curator')
+            .then(response => response.json())
+            .then(data => {
+                const curatorList = document.getElementById('mainList');
+            })
+        }
+
+        function selectPlyy() {
+            clearList();
+            fetchPlyy();
+        }
+
+        function selectCurator() {
+            clearList();
+            fetchCurator();
+        }
+
+        function clearList(){
+            const mainList = document.getElementById('mainList');
+            mainList.removeChild();
+        }
     </script>
+    <script src="/static/js/runtime.js"></script>
 {% endblock %}

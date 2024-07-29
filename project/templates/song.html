@@ -5,9 +5,10 @@
 
 {% block content %}
     <iframe id="video" width=100%></iframe>
+    <br/>
+    <div id="page" style="text-align: center;"></div>
     <div id="info_song">
         <img id="image">
-        <div id="page"></div>
         <div>
             <li id="song">
                 <ul id="song_title"></ul>
@@ -50,7 +51,7 @@
                 }
                 video.setAttribute('src', `${data.song_vid}`);
                 image.setAttribute('src', `${data.img}`);
-                page.textContent = data.song_index + ' / ' + data.total_index;
+                page.textContent = song_index + 1 + ' / ' + data.total_index;
                 song_title.textContent = data.title;
                 artist.textContent = data.artist;
                 album.textContent = data.album

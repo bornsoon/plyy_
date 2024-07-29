@@ -117,9 +117,10 @@ li {
 }
 .plyy_title_box {
     position: sticky;
-    top: 55px;
-    padding-top: 10px;
+    top: 35px;
+    padding-top: 15px;
     background-color: #121212;
+    z-index: 5;
 }
 .plyy_container {
     position: sticky;
@@ -128,7 +129,6 @@ li {
     text-align: center;
     border-radius: 20px;
     color: #121212;
-    z-index: 0;
 }
 #tag_container span {
     display: inline-block;

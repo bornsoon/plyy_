@@ -116,14 +116,23 @@ def api_song(id, song_index):
                  SUBSTR(t.track_album_img,6) AS img,
                  t.track_album AS album,
                  s.song_cmt AS comment,
-                 s.song_vid,
-                 COUNT(s.song_index) AS total_index
+                 s.song_vid
                  FROM TRACK t 
-                 JOIN SONG s ON t.track_uuid=s.track_uuid
-                 JOIN PLYY p ON s.plyy_uuid=p.plyy_uuid
+                 JOIN SONG s ON t.track_uuid=s.track_uuid 
                  WHERE s.plyy_uuid=? AND s.song_index=?
                  '''
     song = db.get_query(song_query, (id,song_index), mul=False)
+
+    total_query = '''
+                  SELECT
+                  COUNT(song_uuid) AS total
+                  FROM SONG
+                  WHERE plyy_uuid=?
+                  '''
+    total_index = db.get_query(total_query, (id,), mul=False)
+
+    song['total_index'] = total_index['total']
+    print(song)
     
     return jsonify(song)
 

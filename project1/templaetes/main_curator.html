@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main_Curator_Selected</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="align both">
+            <div><button class="btn-logo"></button></div>
+            <div class="header-icon-group align both">
+                <button class="btn-bell"><span></span></button> <!-- 새알림 있을 때 dot 필요-->
+                <button class="btn-like"></button>
+                <button class="btn-profile"></button>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="main_container">
+            <div class="m16" style="margin-top: 32px;">
+                <!-- 검색창 -->
+                <div class="search" style="margin-bottom: 16px;">
+                    <div class="align both">
+                        <div class="search_input_box"><input type="text" class="search__input" placeholder="검색어를 입력하세요"></div>
+                        <div class="search_icon_group align both">
+                            <button class="btn-hash"></button>
+                            <button class="btn-search"></button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 추천 태그 -->
+                <nav>
+                    <ul class="search_by_tag">
+                    <li><a href=""># 틱톡</a></li>
+                    <li><a href=""># 방울이</a></li>
+                    <li><a href=""># 귀여워</a></li>
+                    <li><a href=""># 나만_아는_노래</a></li>
+                    <li><a href=""># 너도_맘에_들었으면</a></li>
+                    <li><a href=""># 제이팝</a></li>
+                    <li><a href=""># 노동요</a></li>
+                    <li><a href=""># 새벽감성</a></li>
+                    <li><a href=""># 팝</a></li>
+                    <li><a href=""># 장르불문</a></li>
+                    <li><a href=""># 취향저격</a></li>
+                    <li><a href=""># 업비트</a></li>
+                    <li><a href=""># 힙합</a></li>
+                    </ul>
+                </nav>
+                <!-- 플리 / 큐레이터 탭 (큐레이터 선택됨) -->
+                <nav style="margin-top: 32px;">
+                    <ul class="tab-type15">
+                        <li class="tab-type1--inactive"><button>PLYY</button></li>
+                        <li class="tab-type1--active"><button>CURATOR</button></li>
+                    </ul>
+                </nav>
+            </div>
+            <!-- 플리 카드 -->
+            <ul class="curator_card_list">
+                <li>
+                    <a href="" class="curator_card__info">
+                        <div class="curator_card__thumb">
+                            <div class="badge green">UPDATE</div>
+                            <img src="images/@curator_card.svg" class="curator_card__thumb__large">
+                            <div class="curator_card__taglist">
+                                <div class="badges tag"># 태그</div>
+                                <div class="badges tag"># 태그</div>
+                            </div>
+                            <button class="btn-clike__true" aria-label="플레이리스트 좋아요"></button>
+                        </div>
+                        <div class="curator_card__detail">
+                            <div>
+                                <div class="curator_card__detail--title">큐레이터 이름</div>
+                                <div class="align left">
+                                    <div class="curator_card__detail--cintro">큐레이터 한줄 소개</div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="" class="curator_card__info">
+                        <div class="curator_card__thumb">
+                            <div class="badge green">UPDATE</div>
+                            <img src="images/@curator_card.svg" class="curator_card__thumb__large">
+                            <div class="curator_card__taglist">
+                                <div class="badges tag"># 태그</div>
+                                <div class="badges tag"># 태그</div>
+                            </div>
+                            <button class="btn-clike__false" aria-label="플레이리스트 좋아요"></button>
+                        </div>
+                        <div class="curator_card__detail">
+                            <div>
+                                <div class="curator_card__detail--title">큐레이터 이름</div>
+                                <div class="align left">
+                                    <div class="curator_card__detail--cintro">큐레이터 한줄 소개</div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </main>
+    <div class="footer_container">
+        <footer class="footer"></footer>
+    </div>
+</body>
+</html>

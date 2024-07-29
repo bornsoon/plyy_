@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main_Plyy_Selected</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="align both">
+            <div><button class="btn-logo"></button></div>
+            <div class="header-icon-group align both">
+                <button class="btn-bell"><span></span></button> <!-- 새알림 있을 때 dot 필요-->
+                <button class="btn-like"></button>
+                <button class="btn-profile"></button>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="main_container">
+            <div class="m16" style="margin-top: 32px;">
+                <!-- 검색창 -->
+                <div class="search" style="margin-bottom: 16px;">
+                    <div class="align both">
+                        <div class="search_input_box"><input type="text" class="search__input" placeholder="검색어를 입력하세요"></div>
+                        <div class="search_icon_group align both">
+                            <button class="btn-hash"></button>
+                            <button class="btn-search"></button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 플리 / 큐레이터 탭 (플리 선택됨) -->
+                <nav style="margin-top: 32px;">
+                    <ul class="tab-type2">
+                        <li class="tab-type2"><button class="btn-pre"></button></li>
+                        <li class="tab-type2"><button>In plyy,</button></li>
+                    </ul>
+                </nav>
+            </div>
+            <!-- 플리 카드 -->
+            <ul class="plyy_card_list">
+                <li>
+                    <a href="" class="plyy_card__info">
+                        <div class="plyy_card__thumb">
+                            <div class="badge green">NEW</div>
+                            <img src="images/@plyy_card.svg" class="plyy_card__thumb__large">
+                            <div class="plyy_card__taglist">
+                                <div class="badges tag"># 노동요</div>
+                                <div class="badges tag"># 새벽감성</div>
+                            </div>
+                            <button class="btn-plike__true" aria-label="플레이리스트 좋아요"></button>
+                        </div>
+                        <div class="plyy_card__detail">
+                            <div>
+                                <div class="plyy_card__detail--title">🧇 my_collection.zip 🥐</div>
+                                <div class="align both">
+                                    <div class="plyy_card__detail--cname">curator  LL YOON J</div>
+                                    <div class="plyy_card__detail--count">30곡 | 1시간 2분</div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="" class="plyy_card__info">
+                        <div class="plyy_card__thumb">
+                            <div class="badge green">NEW</div>
+                            <img src="images/@plyy_card.svg" class="plyy_card__thumb__large">
+                            <div class="plyy_card__taglist">
+                                <div class="badges tag"># 노동요</div>
+                                <div class="badges tag"># 새벽감성</div>
+                            </div>
+                            <button class="btn-plike__false" aria-label="플레이리스트 좋아요"></button>
+                        </div>
+                        <div class="plyy_card__detail">
+                            <div>
+                                <div class="plyy_card__detail--title">🧇 my_collection.zip 🥐</div>
+                                <div class="align both">
+                                    <div class="plyy_card__detail--cname">curator  LL YOON J</div>
+                                    <div class="plyy_card__detail--count">30곡 | 1시간 2분</div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </main>
+    <div class="footer_container">
+        <footer class="footer"></footer>
+    </div>
+</body>
+</html>

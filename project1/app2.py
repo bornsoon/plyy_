@@ -1,27 +1,29 @@
 import database as db
 import pandas as pd
-from flask import Flask, jsonify, render_template
+from flask import Blueprint, jsonify, render_template
 
-app = Flask(__name__)
+main = Blueprint('main', __name__)
+plyy = Blueprint('plyy', __name__)
+api_main = Blueprint('api_main', __name__)
+api_plyy = Blueprint('api_plyy', __name__)
 
 
-@app.route('/')
-@app.route('/plyy')
+@main.route('/')
 def index():
     return render_template('index.html')
 
 
-@app.route('/plyy/<id>')
+@plyy.route('/<id>')
 def plyy(id):
     return render_template('plyy.html')
 
 
-@app.route('/plyy/<id>/<song_index>')
+@plyy.route('/<id>/<song_index>')
 def song(id, song_index):
     return render_template('song.html')
 
 
-@app.route('/api/main_plyy')
+@api_main.route('/plyy')
 def api_main_plyy():
     query = '''
             SELECT
@@ -49,7 +51,7 @@ def api_main_plyy():
     return jsonify(plyys)
 
 
-@app.route('/api/main_curator')
+@api_main.route('/curator')
 def api_main_curator():
     query = '''
             SELECT
@@ -81,7 +83,7 @@ def api_main_curator():
     return jsonify(curators)
 
 
-@app.route('/api/plyy/<id>')
+@api_plyy.route('/<id>')
 def api_plyy_detail(id):
     # 쿼리문의 복잡도 줄임 (줄바꿈, 인덴트)
     info_query = '''
@@ -123,7 +125,7 @@ def api_plyy_detail(id):
     return jsonify({'info': info, 'tracks': tracks, 'tags': tags})
 
 
-@app.route('/api/plyy/<id>/<song_index>')
+@api_plyy.route('/<id>/<song_index>')
 def api_song(id, song_index):
     song_query = '''
                  SELECT 

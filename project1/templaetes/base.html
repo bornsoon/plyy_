@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    {% block header %}
+    <header class="header">
+        <div class="align both">
+            <div><button class="btn-logo"></button></div>
+            <div class="header-icon-group align both">
+                <button class="btn-bell"><span></span></button> <!-- 새알림 있을 때 dot 필요-->
+                <button class="btn-like"></button>
+                <button class="btn-profile"></button>
+            </div>
+        </div>
+    </header>
+    {% endblock %}
+
+    {% block search %}{% endblock %}
+    
+    <main>
+        <div class="main_container">
+        {% block container %}{% endblock %}
+        </div>
+    </main>
+    
+    {% block footer %}
+    <div class="footer_container">
+        <footer class="footer"></footer>
+    </div>
+    {% endblock %}
+    
+    {% block script %}{% endblock %}
+    {% block header_script %}{% endblock %}
+    {% block footer_script %}{% endblock %}
+    </body>
+</html>

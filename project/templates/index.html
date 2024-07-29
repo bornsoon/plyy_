@@ -24,20 +24,24 @@
             .then(response =>  response.json())
             .then(data => {
                 const plyyList = document.getElementById('mainList');
-                data.forEach(plyys => {
+                data.forEach(plyy => {
                     const newItem = document.createElement('ul');
                     tags = '';
-                    plyys.tags.forEach(tag => {
+                    plyy.tags.forEach(tag => {
                         tags +=  ' #' + tag.tag_name;
+
+
+                    console.log(tag(plyy.generate, plyy.update))
+
+                    
                     });
-                    newItem.innerHTML = `<div onclick="location.href='./plyy/${plyys.plyy_uuid}'">` +
-                                            `<img src="./static/img/${plyys.plyy_img}">` +
-                                            '<div>' +
+                    newItem.innerHTML = `<div onclick="location.href='./plyy/${plyy.plyy_uuid}'">` +
+                                            `<img src="./static/img/${plyy.plyy_img}">` +
                                                 '<p>' + tags + '</p>' +
-                                                '<p>' + plyys.plyy_title + '</p>' +
+                                                '<p>' + plyy.plyy_title + '</p>' +
                                                 '<div>' +
-                                                    '<p>' + plyys.curator + '</p>' +
-                                                    '<p>' + plyys.tracks + '곡 | ' + plyy_time(plyys.times) + '</p>' +
+                                                    '<p>' + plyy.curator + '</p>' +
+                                                    '<p>' + plyy.tracks + '곡 | ' + plyy_time(plyy.times) + '</p>' +
                                                 '</div>'
                                             '</div>' +
                                         '</div>';
@@ -91,4 +95,5 @@
         }
     </script>
     <script src="/static/js/runtime.js"></script>
+    <script src="/static/js/tag.js"></script>
 {% endblock %}

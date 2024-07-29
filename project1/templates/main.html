@@ -57,11 +57,10 @@
                 const plyy_list = document.getElementById('plyy_list');
                 data.forEach(plyy => {
                     const plyy_card = document.createElement('li');
-                    // date_tag = tag(plyy.generate, plyy.update);
                     plyy_card.innerHTML = 
                         `<a href="./plyy/${plyy.plyy_uuid}" class="plyy_card__info">` +
                             '<div class="plyy_card__thumb">' +
-                                `<div id="date_tag">${date_tag}</div>` +
+                                '<div id="date_tag"></div>' +
                                 `<img src="@static/images/plyy/${plyy.plyy_img}" class="plyy_card__thumb__large">` +
                                 '<div class="plyy_card__taglist" id="taglist"></div>' +
                                 '<button class="btn-plike__true" aria-label="플레이리스트 좋아요"></button>' +
@@ -77,17 +76,18 @@
                         '</div>' +
                     '</a>';
                     
-                    // if (date_tag) {
-                    //     console.log(1)
+                    // if (tag(plyy.generate, plyy.update)) {
+                    //     date_tag = tag(plyy.generate, plyy.update);
                     //     plyy_date_tag = document.getElementById('date_tag');
                     //     plyy_date_tag.classList.add('badges', 'green');
                     // }
 
-                    taglist = document.getElementById('taglist');
+                    const taglist = document.getElementById('taglist');
                     plyy.tags.forEach(tag => {
                         const badges_tag = document.createElement('div');
                         badges_tag.textContent = '# ' + tag.tag_name;
                         badges_tag.classList.add('badges', 'tag');
+                        taglist.appendChild(badges_tag);
                     });
 
                     plyy_list.appendChild(plyy_card)

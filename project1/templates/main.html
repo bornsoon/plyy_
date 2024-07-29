@@ -3,24 +3,25 @@
 <!-- div class="m16" -->
     <!-- 추천 태그 -->
     {% block tag %}
-    <nav>
-        <ul class="search_by_tag"></ul>
-    </nav>
+        <nav>
+            <ul class="search_by_tag" id="tag"></ul>
+        </nav>
     {% endblock %}
 
     <!-- 토글바 -->
     {% block tab %}
         <nav style="margin-top: 32px;">
             <ul class="tab-type1">
-                <li class="tab-type1--active"><button>PLYY</button></li>
-                <li class="tab-type1--inactive"><button>CURATOR</button></li>
+                <li class="tab-type1--active" id="plyy_tab"><button>PLYY</button></li>
+                <li class="tab-type1--inactive" id="curator_tab"><button>CURATOR</button></li>
             </ul>
         </nav>
     {% endblock %}
 <!-- /div -->
 
     {% block content %}
-
+        <!-- 플리 카드 -->
+        <ul class="plyy_card_list" id="plyy_list"></ul>
     {% endblock %}
     
     
@@ -33,52 +34,64 @@
         document.addEventListener('DOMContentLoaded', function() {
             document.title = 'PLYY';
             fetchTag();
-            // fetchPlyy();
+            fetchPlyy();
         });
 
         function fetchTag() {
             fetch('/api/main/tag')
             .then(response => response.json())
             .then(data => {
-                console.log(data)
-                const search_by_tag = document.getElementById('search_by_tag')
-                data.tag.forEach(data => {
-                    const newItem = document.createname('li');
-                    newItem.innerHTML = '# ' + data;
-                    
+                const search_by_tag = document.getElementById('tag')
+                data.forEach(data => {
+                    const newItem = document.createElement('li');
+                    newItem.textContent = '# ' + data.tag;
+                    search_by_tag.appendChild(newItem);
                 })
             }).catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
-        }
+        };
 
         function fetchPlyy() {
             fetch('/api/main/plyy')
             .then(response =>  response.json())
             .then(data => {
-                const plyyList = document.getElementById('mainList');
+                const plyy_list = document.getElementById('plyy_list');
                 data.forEach(plyy => {
-                    const newItem = document.createElement('ul');
-                    tags = '';
-                    plyy.tags.forEach(tag => {
-                        tags +=  ' #' + tag.tag_name;
-
-
-                    console.log(tag(plyy.generate, plyy.update))
-
+                    const plyy_card = document.createElement('li');
+                    // date_tag = tag(plyy.generate, plyy.update);
+                    plyy_card.innerHTML = 
+                        `<a href="./plyy/${plyy.plyy_uuid}" class="plyy_card__info">` +
+                            '<div class="plyy_card__thumb">' +
+                                `<div id="date_tag">${date_tag}</div>` +
+                                `<img src="@static/images/plyy/${plyy.plyy_img}" class="plyy_card__thumb__large">` +
+                                '<div class="plyy_card__taglist" id="taglist"></div>' +
+                                '<button class="btn-plike__true" aria-label="플레이리스트 좋아요"></button>' +
+                            '</div>' +
+                            '<div class="plyy_card__detail">' +
+                            '<div>' +
+                                `<div class="plyy_card__detail--title">${plyy.plyy_title}</div>` +
+                                '<div class="align both">' +
+                                    `<div class="plyy_card__detail--cname">${plyy.curator}</div>` +
+                                    `<div class="plyy_card__detail--count">${plyy.tracks}곡 | ${plyy_time(plyy.times)}</div>` +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</a>';
                     
+                    // if (date_tag) {
+                    //     console.log(1)
+                    //     plyy_date_tag = document.getElementById('date_tag');
+                    //     plyy_date_tag.classList.add('badges', 'green');
+                    // }
+
+                    taglist = document.getElementById('taglist');
+                    plyy.tags.forEach(tag => {
+                        const badges_tag = document.createElement('div');
+                        badges_tag.textContent = '# ' + tag.tag_name;
+                        badges_tag.classList.add('badges', 'tag');
                     });
-                    newItem.innerHTML = `<div onclick="location.href='./plyy/${plyy.plyy_uuid}'">` +
-                                            `<img src="./static/img/${plyy.plyy_img}">` +
-                                                '<p>' + tags + '</p>' +
-                                                '<p>' + plyy.plyy_title + '</p>' +
-                                                '<div>' +
-                                                    '<p>' + plyy.curator + '</p>' +
-                                                    '<p>' + plyy.tracks + '곡 | ' + plyy_time(plyy.times) + '</p>' +
-                                                '</div>'
-                                            '</div>' +
-                                        '</div>';
-                    newItem.classList.add('pointer');
-                    plyyList.appendChild(newItem);
-                })
+
+                    plyy_list.appendChild(plyy_card)
+                });
             })
             .catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
         };

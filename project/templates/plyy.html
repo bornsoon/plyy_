@@ -27,9 +27,9 @@
 {% block script %}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var url = window.location.href
-            url = url.split('/')
-            let plyyId = url[url.length - 1]
+            var url = window.location.href;
+            url = url.split('/');
+            let plyyId = url[url.length - 1];
             fetchPlyyDetail(plyyId);
         });
         
@@ -65,7 +65,6 @@
                 });
                 const lst = document.getElementById('tracks')
                 data.tracks.forEach(track => {
-                    console.log(track.title)
                     const newItem = document.createElement('ul');
                     newItem.innerHTML = 
                         `<div onclick="location.href='./${plyyId}/${parseInt(track.song_index) + 1}'">` +

@@ -116,10 +116,11 @@ def api_song(id, song_index):
                  SUBSTR(t.track_album_img,6) AS img,
                  t.track_album AS album,
                  s.song_cmt AS comment,
-                 s.song_vid
+                 s.song_vid,
+                 COUNT(s.song_index) AS total_index
                  FROM TRACK t 
-                 JOIN SONG s 
-                 ON t.track_uuid=s.track_uuid 
+                 JOIN SONG s ON t.track_uuid=s.track_uuid
+                 JOIN PLYY p ON s.plyy_uuid=p.plyy_uuid
                  WHERE s.plyy_uuid=? AND s.song_index=?
                  '''
     song = db.get_query(song_query, (id,song_index), mul=False)

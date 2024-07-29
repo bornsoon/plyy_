@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base target="_blank">
     <title></title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
+    <!-- 헤더 -->
     {% block header %}
     <header class="header">
         <div class="align both">
@@ -20,22 +22,34 @@
     </header>
     {% endblock %}
 
-    {% block search %}{% endblock %}
     
+    
+    <!-- 메인 -->
     <main>
         <div class="main_container">
-        {% block container %}{% endblock %}
+        {% block container %}
+        
+        <!-- 검색창 -->
+        {% block search %}{% endblock %}
+        
+        {% endblock %}
         </div>
     </main>
     
+    <!-- 푸터 -->
     {% block footer %}
     <div class="footer_container">
         <footer class="footer"></footer>
     </div>
     {% endblock %}
     
+    <!-- 스크립트 -->
     {% block script %}{% endblock %}
+
+    <!-- 헤더 스크립트 -->
     {% block header_script %}{% endblock %}
+
+    <!-- 푸터 스크립트 -->
     {% block footer_script %}{% endblock %}
     </body>
 </html>

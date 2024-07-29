@@ -10,17 +10,33 @@ api_plyy = Blueprint('api_plyy', __name__)
 
 @main.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('main.html')
 
 
 @plyy.route('/<id>')
-def plyy(id):
+def plyy_detail(id):
     return render_template('plyy.html')
 
 
 @plyy.route('/<id>/<song_index>')
-def song(id, song_index):
+def song_detail(id, song_index):
     return render_template('song.html')
+
+
+@api_main.route('/tag')
+def api_main_tag():
+    query = '''
+            SELECT
+            tag_name AS tag
+            FROM TAG
+            UNION
+            SELECT
+            gtag_name AS tag
+            FROM TAG_GENRE
+            '''
+    tags = db.get_query(query)
+
+    return jsonify(tags)
 
 
 @api_main.route('/plyy')

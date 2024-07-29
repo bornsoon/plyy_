@@ -1,0 +1,130 @@
+{% extends "base_search.html" %}
+
+<!-- div class="m16" -->
+    <!-- 추천 태그 -->
+    {% block tag %}
+    <nav>
+        <ul class="search_by_tag"></ul>
+    </nav>
+    {% endblock %}
+
+    <!-- 토글바 -->
+    {% block tab %}
+        <nav style="margin-top: 32px;">
+            <ul class="tab-type1">
+                <li class="tab-type1--active"><button>PLYY</button></li>
+                <li class="tab-type1--inactive"><button>CURATOR</button></li>
+            </ul>
+        </nav>
+    {% endblock %}
+<!-- /div -->
+
+    {% block content %}
+
+    {% endblock %}
+    
+    
+    
+    
+
+
+{% block script %}
+    <script>        
+        document.addEventListener('DOMContentLoaded', function() {
+            document.title = 'PLYY';
+            fetchTag();
+            // fetchPlyy();
+        });
+
+        function fetchTag() {
+            fetch('/api/main/tag')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                const search_by_tag = document.getElementById('search_by_tag')
+                data.tag.forEach(data => {
+                    const newItem = document.createname('li');
+                    newItem.innerHTML = '# ' + data;
+                    
+                })
+            }).catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
+        }
+
+        function fetchPlyy() {
+            fetch('/api/main/plyy')
+            .then(response =>  response.json())
+            .then(data => {
+                const plyyList = document.getElementById('mainList');
+                data.forEach(plyy => {
+                    const newItem = document.createElement('ul');
+                    tags = '';
+                    plyy.tags.forEach(tag => {
+                        tags +=  ' #' + tag.tag_name;
+
+
+                    console.log(tag(plyy.generate, plyy.update))
+
+                    
+                    });
+                    newItem.innerHTML = `<div onclick="location.href='./plyy/${plyy.plyy_uuid}'">` +
+                                            `<img src="./static/img/${plyy.plyy_img}">` +
+                                                '<p>' + tags + '</p>' +
+                                                '<p>' + plyy.plyy_title + '</p>' +
+                                                '<div>' +
+                                                    '<p>' + plyy.curator + '</p>' +
+                                                    '<p>' + plyy.tracks + '곡 | ' + plyy_time(plyy.times) + '</p>' +
+                                                '</div>'
+                                            '</div>' +
+                                        '</div>';
+                    newItem.classList.add('pointer');
+                    plyyList.appendChild(newItem);
+                })
+            })
+            .catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
+        };
+
+        function fetchCurator() {
+            fetch('/api/main/curator')
+            .then(response => response.json())
+            .then(data => {
+                const curatorList = document.getElementById('mainList');
+                data.forEach(c => {
+                    const newItem = document.createElement('ul');
+                    tags = '';
+                    c.tags.forEach(tag => {
+                        tags +=  ' #' + tag.tag_name;
+                    });
+                    newItem.innerHTML = `<div onclick="location.href='./curator/${c.c_uuid}'">` +
+                                            `<img src="./static/img/${c.c_img}">` +
+                                            '<div>' +
+                                                '<p>' + tags + '</p>' +
+                                                '<p>' + c.c_name + '</p>' +
+                                                '<p>' + c.c_intro + '</p>' +
+                                            '</div>' +
+                                        '</div>';
+                    newItem.classList.add('pointer');
+                    curatorList.appendChild(newItem);
+                })
+            })
+            .catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
+        };
+
+        function selectPlyy() {
+            clearList();
+            fetchPlyy();
+        }
+
+        function selectCurator() {
+            clearList();
+            fetchCurator();
+        }
+
+        function clearList(){
+            const mainList = document.getElementById('mainList');
+            while(mainList.firstChild)
+                mainList.removeChild(mainList.firstChild);
+        }
+    </script>
+    <script src="/static/js/runtime.js"></script>
+    <script src="/static/js/tag.js"></script>
+{% endblock %}

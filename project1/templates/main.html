@@ -63,7 +63,7 @@
                                 '<div id="date_tag"></div>' +
                                 `<img src="@static/images/plyy/${plyy.plyy_img}" class="plyy_card__thumb__large">` +
                                 '<div class="plyy_card__taglist" id="taglist"></div>' +
-                                '<button class="btn-plike__true" aria-label="플레이리스트 좋아요"></button>' +
+                                '<button class="btn-plike__true" onclick=window.alert(111);" aria-label="플레이리스트 좋아요"></button>' +
                             '</div>' +
                             '<div class="plyy_card__detail">' +
                             '<div>' +
@@ -76,10 +76,13 @@
                         '</div>' +
                     '</a>';
                     
+                    console.log(plyy.generate)
+                    // console.log(tag(plyy.generate, plyy.update))
                     // if (tag(plyy.generate, plyy.update)) {
-                    //     date_tag = tag(plyy.generate, plyy.update);
-                    //     plyy_date_tag = document.getElementById('date_tag');
-                    //     plyy_date_tag.classList.add('badges', 'green');
+                        // date_tag = tag(plyy.generate, plyy.update);
+                        // plyy_date_tag = document.getElementById('date_tag');
+                        // console.log(1)
+                        // plyy_date_tag.classList.add('badges', 'green');
                     // }
 
                     const taglist = document.getElementById('taglist');
@@ -87,7 +90,7 @@
                         const badges_tag = document.createElement('div');
                         badges_tag.textContent = '# ' + tag.tag_name;
                         badges_tag.classList.add('badges', 'tag');
-                        taglist.appendChild(badges_tag);
+                        // taglist.appendChild(badges_tag);
                     });
 
                     plyy_list.appendChild(plyy_card)

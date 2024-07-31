@@ -1,9 +1,9 @@
 import sqlite3
-
-DB = '../Gen/db/plyy.db'
+import os
 
 def connect_db():
-    conn = sqlite3.connect(DB)
+    database_path = os.path.join(os.path.dirname(__file__), 'plyy.db')
+    conn = sqlite3.connect(database_path)
     conn.execute('PRAGMA foreign_keys = ON')
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
@@ -21,11 +21,8 @@ def get_query(query, params=None, mul=True):
         
     if mul:
         result = cur.fetchall()
-        result = [dict(row) for row in result]
     else:
         result = cur.fetchone()
-        result = dict(result)
-
 
     conn.close()
 
@@ -38,7 +35,8 @@ def execute_query(query, params):
     conn.commit()
     conn.close
 
-def tag_query(category, id):
+
+def tag_query(category, id, mul=True):
     if category.lower() == 'plyy':
         query = '''
                 SELECT
@@ -57,6 +55,11 @@ def tag_query(category, id):
                 WHERE tc.c_uuid=?
                 '''
         
-    tags = get_query(query,(id,))
+    tags = get_query(query, (id,), mul)
     
     return tags
+
+def roll():
+    conn,cur = connect_db()
+    conn.rollback()
+    conn.close()

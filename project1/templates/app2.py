@@ -63,9 +63,9 @@ def api_main_plyy():
     plyys = db.get_query(query)
     result = [dict(row) for row in plyys]
 
-    for i in result:
-        tag = dict(db.tag_query('plyy', i['plyy_uuid'], mul=False))
-        i['tag'] = tag['tag_name']
+    for i in plyys:
+        tag = db.tag_query('plyy', i['plyy_uuid'], mul=False)
+        i['tag'] = dict(tag)['tag_name']
     
     return jsonify(result)
 

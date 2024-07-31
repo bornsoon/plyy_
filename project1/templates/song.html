@@ -1,0 +1,62 @@
+{% extends "base_none.html" %}
+{% block style %}
+<link rel="stylesheet" href="/static/css/base.css"/>
+{% endblock %}
+
+{% block content %}
+    <iframe id="video" width=100%></iframe>
+    <br><br>
+    <div id="page" style="text-align: center;"></div>
+    <div id="info_song">
+        <img id="image">
+        <div>
+            <li id="song">
+                <ul id="song_title"></ul>
+                <ul id="song_artist"></ul>
+                <ul id="song_album"></ul>
+            </li>
+        </div>
+    </div>
+    <div class="comment">
+        <div id="song_comment"></div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var url = window.location.href;
+            url = url.split('/');
+            let plyyId = url[url.length - 2];
+            let song_index = url[url.length - 1] - 1;
+            fetchSong(plyyId, song_index);
+        });
+        
+        function fetchSong(plyyId, song_index) {
+            fetch(`/api/plyy/${plyyId}/${song_index}`)
+            .then(response =>  response.json())
+            .then(data => {
+                document.title =  data.title + ' | PLYY';
+                const video = document.getElementById('video');
+                const image = document.getElementById('image');
+                const page = document.getElementById('page');
+                const song_title = document.getElementById('song_title');
+                const artist = document.getElementById('song_artist');
+                const album = document.getElementById('song_album');
+                if (data.comment) {
+                    newItem = document.createElement('div');
+                    const song_comment = document.getElementById('song_comment');
+                    newItem.textContent = data.comment;
+                    song_comment.appendChild(newItem);
+                }
+                video.setAttribute('src', `${data.song_vid}`);
+                image.setAttribute('src', `${data.img}`);
+                page.textContent = song_index + 1 + ' / ' + data.total_index;
+                song_title.textContent = data.title;
+                artist.textContent = data.artist;
+                album.textContent = data.album
+            })
+            .catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
+        };
+    </script>
+{% endblock %}

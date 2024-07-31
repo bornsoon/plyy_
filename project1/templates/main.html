@@ -23,14 +23,9 @@
         <!-- 플리 카드 -->
         <ul class="plyy_card_list" id="plyy_list"></ul>
     {% endblock %}
-    
-    
-    
-    
-
 
 {% block script %}
-    <script>        
+    <script>   
         document.addEventListener('DOMContentLoaded', function() {
             document.title = 'PLYY';
             fetchTag();
@@ -50,20 +45,26 @@
             }).catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
         };
 
+        
         function fetchPlyy() {
             fetch('/api/main/plyy')
             .then(response =>  response.json())
             .then(data => {
                 const plyy_list = document.getElementById('plyy_list');
                 data.forEach(plyy => {
+                    let tagId = 'tag' + plyy.plyy_uuid;
+                    let heartId = 'heart' + plyy.plyy_uuid; 
                     const plyy_card = document.createElement('li');
                     plyy_card.innerHTML = 
                         `<a href="./plyy/${plyy.plyy_uuid}" class="plyy_card__info">` +
                             '<div class="plyy_card__thumb">' +
-                                '<div id="date_tag"></div>' +
+                                `<div id="${tagId}">abc</div>` +
                                 `<img src="@static/images/plyy/${plyy.plyy_img}" class="plyy_card__thumb__large">` +
-                                '<div class="plyy_card__taglist" id="taglist"></div>' +
-                                '<button class="btn-plike__true" onclick=window.alert(111);" aria-label="플레이리스트 좋아요"></button>' +
+                                '<div class="plyy_card__taglist">' +
+                                    `<div class="badges tag"># ${plyy.genre}</div>` +
+                                    `<div class="badges tag"># ${plyy.tag}</div>` +
+                                '</div>' +
+                                `<button class="btn-plike__true" id=${heartId} aria-label="플레이리스트 좋아요"></button>` +
                             '</div>' +
                             '<div class="plyy_card__detail">' +
                             '<div>' +
@@ -75,29 +76,31 @@
                             '</div>' +
                         '</div>' +
                     '</a>';
-                    
-                    console.log(plyy.generate)
-                    // console.log(tag(plyy.generate, plyy.update))
-                    // if (tag(plyy.generate, plyy.update)) {
-                        // date_tag = tag(plyy.generate, plyy.update);
-                        // plyy_date_tag = document.getElementById('date_tag');
-                        // console.log(1)
-                        // plyy_date_tag.classList.add('badges', 'green');
-                    // }
-
-                    const taglist = document.getElementById('taglist');
-                    plyy.tags.forEach(tag => {
-                        const badges_tag = document.createElement('div');
-                        badges_tag.textContent = '# ' + tag.tag_name;
-                        badges_tag.classList.add('badges', 'tag');
-                        // taglist.appendChild(badges_tag);
-                    });
+                                   
+                    if (tag(plyy.generate, plyy.update)) {
+                        date_tag = tag(plyy.generate, plyy.update);
+                        console.log(tagId);
+                        plyy_date_tag = document.getElementById(tagId);
+                        console.log(plyy_date_tag);
+                        plyy_date_tag.textContent = date_tag;
+                        plyy_date_tag.classList.add('badges', 'green');
+                    }
 
                     plyy_list.appendChild(plyy_card)
                 });
             })
+            .then(function(){
+                heart = document.getElementById(heartId);
+                console.log(heart)
+                heart.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    // event.stopPropagation();  # 이벤트 용 처리 막기
+                })
+            })
             .catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
         };
+
+        
 
         function fetchCurator() {
             fetch('/api/main/curator')

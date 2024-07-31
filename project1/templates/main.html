@@ -76,7 +76,10 @@
                             '</div>' +
                         '</div>' +
                     '</a>';
-                                   
+
+                    plyy_list.appendChild(plyy_card)
+                })
+                .then(plyy => {
                     if (tag(plyy.generate, plyy.update)) {
                         date_tag = tag(plyy.generate, plyy.update);
                         console.log(tagId);
@@ -85,21 +88,18 @@
                         plyy_date_tag.textContent = date_tag;
                         plyy_date_tag.classList.add('badges', 'green');
                     }
-
-                    plyy_list.appendChild(plyy_card)
-                });
-            })
-            .then(function(){
-                heart = document.getElementById(heartId);
-                console.log(heart)
-                heart.addEventListener('click', function(event) {
+                })
+                .then(plyy => {
+                    heart = document.getElementById(heartId);
+                    console.log(heart)
+                    heart.addEventListener('click', function(event) {
                     event.preventDefault();
                     // event.stopPropagation();  # 이벤트 용 처리 막기
+                    })
                 })
             })
             .catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
         };
-
         
 
         function fetchCurator() {

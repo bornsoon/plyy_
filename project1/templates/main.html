@@ -51,7 +51,7 @@
             .then(response =>  response.json())
             .then(data => {
                 const plyy_list = document.getElementById('plyy_list');
-                data.forEach(plyy => {
+                for (let plyy of data) {
                     let tagId = 'tag' + plyy.plyy_uuid;
                     let heartId = 'heart' + plyy.plyy_uuid; 
                     const plyy_card = document.createElement('li');
@@ -79,22 +79,23 @@
 
                     plyy_list.appendChild(plyy_card)
 
-                    if (tag(plyy.generate, plyy.update)) {
-                        date_tag = tag(plyy.generate, plyy.update);
-                        console.log(tagId);
-                        plyy_date_tag = document.getElementById(tagId);
-                        console.log(plyy_date_tag);
-                        plyy_date_tag.textContent = date_tag;
-                        plyy_date_tag.classList.add('badges', 'green');
-                    }
+                    console.log(tag(plyy.generate, plyy.update))
+                    // if (tag(plyy.generate, plyy.update)) {
+                    //     console(1);
+                    //     date_tag = tag(plyy.generate, plyy.update);
+                    //     console.log(tagId);
+                    //     plyy_date_tag = document.getElementById(tagId);
+                    //     console.log(plyy_date_tag);
+                    //     plyy_date_tag.textContent = date_tag;
+                    //     plyy_date_tag.classList.add('badges', 'green');
+                    // }
                     
                     heart = document.getElementById(heartId);
-                    console.log(heart)
                     heart.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    // event.stopPropagation();  # 이벤트 용 처리 막기
+                        event.preventDefault();
+                        // event.stopPropagation();  # 이벤트 용 처리 막기
                     })
-                })
+                }
             })
             .catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
         };

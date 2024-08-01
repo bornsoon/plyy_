@@ -51,14 +51,14 @@
             .then(response =>  response.json())
             .then(data => {
                 const plyy_list = document.getElementById('plyy_list');
-                for (let plyy of data) {
+                data.forEach(plyy => {
                     let tagId = 'tag' + plyy.plyy_uuid;
                     let heartId = 'heart' + plyy.plyy_uuid; 
                     const plyy_card = document.createElement('li');
                     plyy_card.innerHTML = 
                         `<a href="./plyy/${plyy.plyy_uuid}" class="plyy_card__info">` +
                             '<div class="plyy_card__thumb">' +
-                                `<div id="${tagId}"></div>` +
+                                `<div id="${tagId}" class="badge green"></div>` +
                                 `<img src="@static/images/plyy/${plyy.plyy_img}" class="plyy_card__thumb__large">` +
                                 '<div class="plyy_card__taglist">' +
                                     `<div class="badges tag"># ${plyy.genre}</div>` +
@@ -79,23 +79,19 @@
 
                     plyy_list.appendChild(plyy_card)
 
-                    console.log(tag(plyy.generate, plyy.update))
-                    // if (tag(plyy.generate, plyy.update)) {
-                    //     console(1);
-                    //     date_tag = tag(plyy.generate, plyy.update);
-                    //     console.log(tagId);
-                    //     plyy_date_tag = document.getElementById(tagId);
-                    //     console.log(plyy_date_tag);
-                    //     plyy_date_tag.textContent = date_tag;
-                    //     plyy_date_tag.classList.add('badges', 'green');
-                    // }
-                    
+                    plyy_date_tag = document.getElementById(tagId);
+                    if (tag(plyy.generate, plyy.update)) {
+                        date_tag = tag(plyy.generate, plyy.update);
+                        plyy_date_tag.textContent = date_tag;
+                        plyy_date_tag.classList.add('badges', 'green');
+                    }
+
                     heart = document.getElementById(heartId);
                     heart.addEventListener('click', function(event) {
                         event.preventDefault();
                         // event.stopPropagation();  # 이벤트 용 처리 막기
                     })
-                }
+                })
             })
             .catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
         };

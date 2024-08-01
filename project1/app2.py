@@ -97,10 +97,10 @@ def api_main_curator():
                  '''
     date = db.get_query(date_query)
     
-    for i in date:
-        i['max_date'] = [pd.to_datetime(i['generate']), pd.to_datetime(i['update'])].max()
+    # for i in date:
+        # i['max_date'] = [pd.to_datetime(i['generate']), pd.to_datetime(i['update'])].max()
 
-    return jsonify(results)
+    return jsonify(result)
 
 
 @api_plyy.route('/<id>')

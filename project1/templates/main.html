@@ -20,14 +20,13 @@
 <!-- /div -->
 
     {% block content %}
-        <!-- 플리 카드 -->
-        <ul class="plyy_card_list" id="plyy_list"></ul>
+        <!-- 플리 & 큐레이터 카드 -->
+        <ul class="plyy_card_list" id="mainList"></ul>
     {% endblock %}
 
 {% block script %}
     <script>   
         document.addEventListener('DOMContentLoaded', function() {
-            document.title = 'PLYY';
             fetchTag();
             fetchPlyy();
         });
@@ -36,11 +35,11 @@
             fetch('/api/main/tag')
             .then(response => response.json())
             .then(data => {
-                const search_by_tag = document.getElementById('tag')
+                const searchByTag = document.getElementById('tag')
                 data.forEach(data => {
                     const newItem = document.createElement('li');
                     newItem.textContent = '# ' + data.tag;
-                    search_by_tag.appendChild(newItem);
+                    searchByTag.appendChild(newItem);
                 })
             }).catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
         };
@@ -50,47 +49,58 @@
             fetch('/api/main/plyy')
             .then(response =>  response.json())
             .then(data => {
-                const plyy_list = document.getElementById('plyy_list');
-                data.forEach(plyy => {
-                    let tagId = 'tag' + plyy.plyy_uuid;
-                    let heartId = 'heart' + plyy.plyy_uuid; 
-                    const plyy_card = document.createElement('li');
-                    plyy_card.innerHTML = 
+                document.title = 'PLYY';
+                const plyyList = document.getElementById('mainList');
+                data.forEach((plyy, index) => {
+                    let dateTagId = 'dateTag' + index;
+                    let plyyTagId = 'plyyTag' + index;
+                    let heartId = 'heart' + index; 
+                    const plyyCard = document.createElement('li');
+                    plyyCard.innerHTML = 
                         `<a href="./plyy/${plyy.plyy_uuid}" class="plyy_card__info">` +
                             '<div class="plyy_card__thumb">' +
-                                `<div id="${tagId}" class="badge green"></div>` +
+                                `<div id="${dateTagId}" class="badge green"></div>` +
                                 `<img src="@static/images/plyy/${plyy.plyy_img}" class="plyy_card__thumb__large">` +
                                 '<div class="plyy_card__taglist">' +
                                     `<div class="badges tag"># ${plyy.genre}</div>` +
-                                    `<div class="badges tag"># ${plyy.tag}</div>` +
+                                    `<div id="${plyyTagId}" class="badges tag"></div>` +
                                 '</div>' +
                                 `<button class="btn-plike__true" id=${heartId} aria-label="플레이리스트 좋아요"></button>` +
                             '</div>' +
                             '<div class="plyy_card__detail">' +
-                            '<div>' +
-                                `<div class="plyy_card__detail--title">${plyy.plyy_title}</div>` +
-                                '<div class="align both">' +
-                                    `<div class="plyy_card__detail--cname">${plyy.curator}</div>` +
-                                    `<div class="plyy_card__detail--count">${plyy.tracks}곡 | ${plyy_time(plyy.times)}</div>` +
+                                '<div>' +
+                                    `<div class="plyy_card__detail--title">${plyy.plyy_title}</div>` +
+                                    '<div class="align both">' +
+                                        `<div class="plyy_card__detail--cname">${plyy.curator}</div>` +
+                                        `<div class="plyy_card__detail--count">${plyy.tracks}곡 | ${plyy_time(plyy.times)}</div>` +
+                                    '</div>' +
                                 '</div>' +
                             '</div>' +
-                        '</div>' +
-                    '</a>';
+                        '</a>';
 
-                    plyy_list.appendChild(plyy_card)
+                    plyyList.appendChild(plyyCard);
 
-                    plyy_date_tag = document.getElementById(tagId);
+                    let dateTag = document.getElementById(dateTagId);
                     if (tag(plyy.generate, plyy.update)) {
-                        date_tag = tag(plyy.generate, plyy.update);
-                        plyy_date_tag.textContent = date_tag;
-                        plyy_date_tag.classList.add('badges', 'green');
-                    }
+                        date = tag(plyy.generate, plyy.update);
+                        dateTag.textContent = date;
+                        dateTag.classList.add('badges', 'green');
+                    } else {
+                        dateTag.style.visibility = "hidden";
+                    };
+                    
+                    let plyy_tag = document.getElementById(plyyTagId);
+                    if (plyy.tag) {
+                        plyy_tag.textContent = '#' + plyy.tag;
+                    } else {
+                        plyy_tag.style.visibility = "hidden";
+                    };
 
-                    heart = document.getElementById(heartId);
+                    let heart = document.getElementById(heartId);
                     heart.addEventListener('click', function(event) {
                         event.preventDefault();
                         // event.stopPropagation();  # 이벤트 용 처리 막기
-                    })
+                    });
                 })
             })
             .catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
@@ -101,43 +111,107 @@
             fetch('/api/main/curator')
             .then(response => response.json())
             .then(data => {
+                document.title = 'PLYY | CURATOR';
                 const curatorList = document.getElementById('mainList');
-                data.forEach(c => {
-                    const newItem = document.createElement('ul');
-                    tags = '';
-                    c.tags.forEach(tag => {
-                        tags +=  ' #' + tag.tag_name;
+                data.forEach((curator, index) => {
+                    let dateTagId = 'dateTag' + index;
+                    let curatorTagId1 = 'curatorTag1' + index;
+                    let curatorTagId2 = 'curatorTag2' + index;
+                    let heartId = 'heart' + index;
+                    const newItem = document.createElement('li');
+                    curatorCard.innerHTML = 
+                        `<a href="./curator/${curator.c_uuid}" class="curator_card__info">` +
+                            '<div class="curator_card__thumb">' +
+                                `<div id="${dateTagId}" class="badge green"></div>` +
+                                `<img src="@static/images/curator/${c.c_img}" class="curator_card__thumb__large">` +
+                                '<div class="curator_card__taglist">' +
+                                    `<div id="${curatorTagId1}" class="badges tag"></div>` +
+                                    `<div id="${curatorTagId2}" class="badges tag"></div>` +
+                                '</div>' +
+                                `<button class="btn-clike__true" id=${heartId} aria-label="큐레이터 좋아요"></button>` +
+                            '</div>' +
+                            '<div class="curator_card__detail">' +
+                                '<div>' +
+                                    `<div class="curator_card__detail--title">${d.c_name}</div>` +
+                                    '<div class="align both">' +
+                                        `<div class="curator_card__detail--cintro">${c.c_intro}</div>` +
+                                    '</div>' +
+                                '</div>' +
+                            '</div>' +
+                        '</a>';
+
+                    caratorList.appendChild(curatorCard);
+
+                    let date_tag = document.getElementById(dateTagId);
+                    if (tag(plyy.generate, plyy.update)) {
+                        date = tag(plyy.generate, plyy.update);
+                        date_tag.textContent = date;
+                        date_tag.classList.add('badges', 'green');
+                    } else {
+                        date_tag.style.visibility = "hidden";
+                    };
+                    
+                    let curatorTag1 = document.getElementById(curatorTagId1);
+                    let curatorTag2 = document.getElementById(curatorTagId2);
+                    let tag = [curatorTag1, curatorTag2]
+                    tag.forEach((elementn, index) => {
+                        if (element) {
+                            element.textContent = '#' + c.tag[index];
+                        } else {
+                            element.style.visibility = "hidden";
+                        }
                     });
-                    newItem.innerHTML = `<div onclick="location.href='./curator/${c.c_uuid}'">` +
-                                            `<img src="./static/img/${c.c_img}">` +
-                                            '<div>' +
-                                                '<p>' + tags + '</p>' +
-                                                '<p>' + c.c_name + '</p>' +
-                                                '<p>' + c.c_intro + '</p>' +
-                                            '</div>' +
-                                        '</div>';
-                    newItem.classList.add('pointer');
-                    curatorList.appendChild(newItem);
+
+                    let heart = document.getElementById(heartId);
+                    heart.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        // event.stopPropagation();  # 이벤트 용 처리 막기
+                    });
                 })
             })
             .catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
         };
+        //             tags = '';
+        //             c.tags.forEach(tag => {
+        //                 tags +=  ' #' + tag.tag_name;
+        //             });
+        //             newItem.innerHTML = `<div onclick="location.href='./curator/${c.c_uuid}'">` +
+        //                                     `<img src="./static/img/${c.c_img}">` +
+        //                                     '<div>' +
+        //                                         '<p>' + tags + '</p>' +
+        //                                         '<p>' + c.c_name + '</p>' +
+        //                                         '<p>' + c.c_intro + '</p>' +
+        //                                     '</div>' +
+        //                                 '</div>';
+        //             newItem.classList.add('pointer');
+        //             curatorList.appendChild(newItem);
+        //         })
+        //     })
+        //     .catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
+        // };
 
-        function selectPlyy() {
-            clearList();
-            fetchPlyy();
-        }
-
-        function selectCurator() {
-            clearList();
-            fetchCurator();
-        }
 
         function clearList(){
             const mainList = document.getElementById('mainList');
             while(mainList.firstChild)
                 mainList.removeChild(mainList.firstChild);
-        }
+        };
+
+
+        plyyTag = document.getElementById('plyy_tab');
+        curatorTag = document.getElementById('curator_tab');
+
+        plyyTag.addEventListener('click', function(event){
+            clearList();
+            fetchPlyy();
+        });
+
+
+        curatorTag.addEventListener('click', function(event){
+            clearList();
+            fetchCurator();
+        });
+
     </script>
     <script src="/static/js/runtime.js"></script>
     <script src="/static/js/tag.js"></script>

@@ -87,10 +87,15 @@ def api_main_curator():
             GROUP BY c_uuid;
             '''
     curators = db.get_query(query)
-    result = [dict(row) for row in curators]
+    curator = [dict(row) for row in curator]
     
     for i in curators:
-        i['tags'] = db.tag_query('curator', i['c_uuid'])
+        tag = db.tag_query('curator', i['c_uuid'])
+        if tag:
+            tag = dict(tag)
+            i['tag'] = tag['tag_name']
+        else:
+            i['tag'] = ''
 
     date_query = '''
                  SELECT
@@ -101,11 +106,12 @@ def api_main_curator():
                  GROUP BY c.c_uuid
                  '''
     date = db.get_query(date_query)
-    
+    date = [dict(row) for row in date]
+
     # for i in date:
         # i['max_date'] = [pd.to_datetime(i['generate']), pd.to_datetime(i['update'])].max()
 
-    return jsonify(result)
+    return jsonify({'curator': curator, 'date' : date})
 
 
 @api_plyy.route('/<id>')

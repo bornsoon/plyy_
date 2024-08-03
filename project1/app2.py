@@ -89,30 +89,25 @@ def api_main_curator():
     curators = db.get_query(query)
     curator = [dict(row) for row in curators]
     
-    for i in curators:
+    for i in curator:
         tags = db.tag_query('curator', i['c_uuid'])
-        tag = [dict(row) for row in tags]
-
+        tag = []
+        for j in tags[:2]:
+            tag.append(j['tag_name'])
+        i['c_tag'] = tag
 
     date_query = '''
                  SELECT
-                 MAX(date)
-                 FROM (
-                 SELECT
-                 MAX(p.plyy_gen_date) AS date,
-                 MAX(p.plyy_update_date) AS date'
+                 MAX(p.plyy_gen_date) AS generate,
+                 MAX(p.plyy_update_date) AS 'update'
                  FROM PLYY p
                  JOIN CURATOR c ON p.c_uuid=c.c_uuid
-                 GROUP BY c.c_uuid
-                 );
+                 GROUP BY c.c_uuid;
                  '''
     date = db.get_query(date_query)
-    date = [dict(row) for row in date]
 
-    # for i in date:
-        # i['max_date'] = [pd.to_datetime(i['generate']), pd.to_datetime(i['update'])].max()
 
-    return jsonify({'curator': curator, 'date' : date})
+    return jsonify(curator)
 
 
 @api_plyy.route('/<id>')

@@ -1,4 +1,4 @@
-function tag(generate, update) {
+function plyyTag(generate, update) {
     now = new Date();
     nowTime = Math.ceil(now.getTime() / (1000 * 60 * 60 * 24));
     generate = new Date(generate);
@@ -10,8 +10,19 @@ function tag(generate, update) {
         updateTime = 0;
     }
     if (!update && ((nowTime - generateTime) < 32)) {
-        return 'new'
+        return 'NEW'
     } else if ((nowTime - updateTime) < 32) {
-        return 'update'
+        return 'UPDATE'
+    }
+}
+
+
+function curatorTag(date) {
+    now = new Date();
+    nowTime = Math.ceil(now.getTime() / (1000 * 60 * 60 * 24));
+    date = new Date(date);
+    dateTime = Math.ceil(date.getTime() / (1000 * 60 * 60 * 24));
+    if ((nowTime - dateTime) < 32) {
+        return True
     }
 }

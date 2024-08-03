@@ -81,8 +81,8 @@
                     plyyList.appendChild(plyyCard);
 
                     let dateTag = document.getElementById(dateTagId);
-                    if (tag(plyy.generate, plyy.update)) {
-                        date = tag(plyy.generate, plyy.update);
+                    date = plyyTag(plyy.generate, plyy.update);
+                    if (date) {
                         dateTag.textContent = date;
                         dateTag.classList.add('badges', 'green');
                     } else {
@@ -114,15 +114,17 @@
                 document.title = 'PLYY | CURATOR';
                 const curatorList = document.getElementById('mainList');
                 data.forEach((curator, index) => {
-                    let dateTagId = 'dateTag' + index;
+                    let newTagId = 'newTag' + index;
+                    let updateTagId = 'updateTag' + index;
                     let curatorTagId1 = 'curatorTag1' + index;
                     let curatorTagId2 = 'curatorTag2' + index;
                     let heartId = 'heart' + index;
                     const newItem = document.createElement('li');
                     curatorCard.innerHTML = 
-                        `<a href="./curator/${curator.c_uuid}" class="curator_card__info">` +
+                        `<a href="./curator/${c_uuid}" class="curator_card__info">` +
                             '<div class="curator_card__thumb">' +
-                                `<div id="${dateTagId}" class="badge green"></div>` +
+                                `<div id="${newTagId}" class="badge green">NEW</div>` +
+                                `<div id="${updateTagId}" class="badge green">UPDATE</div>` +
                                 `<img src="@static/images/curator/${c.c_img}" class="curator_card__thumb__large">` +
                                 '<div class="curator_card__taglist">' +
                                     `<div id="${curatorTagId1}" class="badges tag"></div>` +
@@ -142,8 +144,8 @@
 
                     caratorList.appendChild(curatorCard);
 
-                    let date_tag = document.getElementById(dateTagId);
-                    if (tag(plyy.generate, plyy.update)) {
+                    let newTag = document.getElementById(newTagId);
+                    if (curatorTag(c)) {
                         date = tag(plyy.generate, plyy.update);
                         date_tag.textContent = date;
                         date_tag.classList.add('badges', 'green');

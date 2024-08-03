@@ -90,16 +90,17 @@ def api_main_curator():
     result = [dict(row) for row in curators]
     
     for i in result:
+        print(i['c_name'])
         tags = db.tag_query('curator', i['c_uuid'])
         tag = []
-        for j in tags[:2]:
+        for j in tags[:1]:
             tag.append(j['tag_name'])
         i['c_tag'] = tag
 
     date_query = '''
                  SELECT
-                 MAX(p.plyy_gen_date) AS generate,
-                 MAX(p.plyy_update_date) AS 'update'
+                 MAX(strftime('%Y-%m-%d', p.plyy_gen_date)) AS generate,
+                 MAX(strftime('%Y-%m-%d', p.plyy_update_date)) AS 'update'
                  FROM PLYY p
                  JOIN CURATOR c ON p.c_uuid=c.c_uuid
                  GROUP BY c.c_uuid

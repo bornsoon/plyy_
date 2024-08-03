@@ -31,6 +31,8 @@
             fetchPlyy();
         });
 
+
+        // 추천 태그
         function fetchTag() {
             fetch('/api/main/tag')
             .then(response => response.json())
@@ -44,7 +46,8 @@
             }).catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
         };
 
-        
+
+        // 플리 카드
         function fetchPlyy() {
             fetch('/api/main/plyy')
             .then(response =>  response.json())
@@ -80,15 +83,16 @@
 
                     plyyList.appendChild(plyyCard);
 
+                    // NEW | UPDATE 태그
                     let dateTag = document.getElementById(dateTagId);
-                    isDate = plyyTag(plyy.generate, plyy.update);
+                    isDate = isTag(plyy.generate, plyy.update);
                     if (isDate) {
                         dateTag.textContent = isDate;
-                        dateTag.classList.add('badges', 'green');
                     } else {
                         dateTag.style.visibility = "hidden";
                     };
                     
+                    // 플리태그 2개까지
                     let plyy_tag = document.getElementById(plyyTagId);
                     if (plyy.tag) {
                         plyy_tag.textContent = '#' + plyy.tag;
@@ -96,34 +100,34 @@
                         plyy_tag.style.visibility = "hidden";
                     };
 
+                    // 플리 하트
                     let heart = document.getElementById(heartId);
                     heart.addEventListener('click', function(event) {
                         event.preventDefault();
-                        // event.stopPropagation();  # 이벤트 용 처리 막기
+                        // event.stopPropagation();  # 이벤트용 처리 막기
                     });
                 })
             })
             .catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
         };
-        
 
+        
+        // 큐레이터 카드
         function fetchCurator() {
             fetch('/api/main/curator')
             .then(response => response.json())
             .then(data => {
                 document.title = 'PLYY | CURATOR';
                 const curatorList = document.getElementById('mainList');
-                data.forEach((curator, index) => {
-                    let newTagId = 'newTag' + index;
+                data.forEach((c, index) => {
                     let updateTagId = 'updateTag' + index;
                     let curatorTagId1 = 'curatorTag1' + index;
                     let curatorTagId2 = 'curatorTag2' + index;
                     let heartId = 'heart' + index;
-                    const newItem = document.createElement('li');
-                    curatorCard.innerHTML = 
-                        `<a href="./curator/${c_uuid}" class="curator_card__info">` +
+                    const curatorCard = document.createElement('li');
+                    curatorCard.innerHTML =
+                        `<a href="./curator/${c.c_uuid}" class="curator_card__info">` +
                             '<div class="curator_card__thumb">' +
-                                `<div id="${newTagId}" class="badge green">NEW</div>` +
                                 `<div id="${updateTagId}" class="badge green">UPDATE</div>` +
                                 `<img src="@static/images/curator/${c.c_img}" class="curator_card__thumb__large">` +
                                 '<div class="curator_card__taglist">' +
@@ -134,32 +138,36 @@
                             '</div>' +
                             '<div class="curator_card__detail">' +
                                 '<div>' +
-                                    `<div class="curator_card__detail--title">${d.c_name}</div>` +
+                                    `<div class="curator_card__detail--title">${c.c_name}</div>` +
                                     '<div class="align both">' +
                                         `<div class="curator_card__detail--cintro">${c.c_intro}</div>` +
                                     '</div>' +
                                 '</div>' +
                             '</div>' +
                         '</a>';
-
-                    caratorList.appendChild(curatorCard);
-
-                    let newTag = document.getElementById(newTagId);
-                    let isNew = curatorTag(c)
-                    if (curatorTag(c)) {
-                        date = tag(plyy.generate, plyy.update);
-                        date_tag.textContent = date;
-                        date_tag.classList.add('badges', 'green');
-                    } else {
-                        date_tag.style.visibility = "hidden";
+                    curatorList.appendChild(curatorCard); 
+                    
+                    // UPDATE 태그
+                    let updateTag = document.getElementById(updateTagId);
+                    let isUpdate = isTag(c.generate, c.update);
+                    if (!(isUpdate)) {
+                        updateTag.style.visibility = "hidden";
                     };
                     
-                    let tag = [curatorTag1, curatorTag2]
-                    tag.forEach((elementn, index) => {
-                        if (element) {
-                            element.textContent = '#' + c.tag[index];
+                    // 큐레이터의 플리 태그 2개까지
+                    let curatorTag1 = document.getElementById(curatorTagId1);
+                    let curatorTag2 = document.getElementById(curatorTagId2);
+                    let tag = [curatorTag1, curatorTag2];
+                    console.log(c.c_name +' '+ !(c.c_tag))
+                    if (c.c_tag == '') {
+                        tag[0].style.visibility = "hidden";
+                        tag[1].style.visibility = "hidden";
+                    }
+                    c.c_tag.forEach((element, index) => {
+                        if (element == '') {
+                            tag[index].style.visibility = "hidden";
                         } else {
-                            element.style.visibility = "hidden";
+                            tag[index].textContent = '#' + element;
                         }
                     });
 
@@ -172,24 +180,6 @@
             })
             .catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
         };
-        //             tags = '';
-        //             c.tags.forEach(tag => {
-        //                 tags +=  ' #' + tag.tag_name;
-        //             });
-        //             newItem.innerHTML = `<div onclick="location.href='./curator/${c.c_uuid}'">` +
-        //                                     `<img src="./static/img/${c.c_img}">` +
-        //                                     '<div>' +
-        //                                         '<p>' + tags + '</p>' +
-        //                                         '<p>' + c.c_name + '</p>' +
-        //                                         '<p>' + c.c_intro + '</p>' +
-        //                                     '</div>' +
-        //                                 '</div>';
-        //             newItem.classList.add('pointer');
-        //             curatorList.appendChild(newItem);
-        //         })
-        //     })
-        //     .catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
-        // };
 
 
         function clearList(){
@@ -201,6 +191,7 @@
 
         plyyTag = document.getElementById('plyy_tab');
         curatorTag = document.getElementById('curator_tab');
+
 
         plyyTag.addEventListener('click', function(event){
             clearList();

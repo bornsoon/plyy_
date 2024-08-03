@@ -81,9 +81,9 @@
                     plyyList.appendChild(plyyCard);
 
                     let dateTag = document.getElementById(dateTagId);
-                    date = plyyTag(plyy.generate, plyy.update);
-                    if (date) {
-                        dateTag.textContent = date;
+                    isDate = plyyTag(plyy.generate, plyy.update);
+                    if (isDate) {
+                        dateTag.textContent = isDate;
                         dateTag.classList.add('badges', 'green');
                     } else {
                         dateTag.style.visibility = "hidden";
@@ -145,6 +145,7 @@
                     caratorList.appendChild(curatorCard);
 
                     let newTag = document.getElementById(newTagId);
+                    let isNew = curatorTag(c)
                     if (curatorTag(c)) {
                         date = tag(plyy.generate, plyy.update);
                         date_tag.textContent = date;
@@ -153,8 +154,6 @@
                         date_tag.style.visibility = "hidden";
                     };
                     
-                    let curatorTag1 = document.getElementById(curatorTagId1);
-                    let curatorTag2 = document.getElementById(curatorTagId2);
                     let tag = [curatorTag1, curatorTag2]
                     tag.forEach((elementn, index) => {
                         if (element) {

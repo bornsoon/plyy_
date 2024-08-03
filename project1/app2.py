@@ -87,9 +87,9 @@ def api_main_curator():
             GROUP BY c_uuid;
             '''
     curators = db.get_query(query)
-    curator = [dict(row) for row in curators]
+    result = [dict(row) for row in curators]
     
-    for i in curator:
+    for i in result:
         tags = db.tag_query('curator', i['c_uuid'])
         tag = []
         for j in tags[:2]:
@@ -102,12 +102,14 @@ def api_main_curator():
                  MAX(p.plyy_update_date) AS 'update'
                  FROM PLYY p
                  JOIN CURATOR c ON p.c_uuid=c.c_uuid
-                 GROUP BY c.c_uuid;
+                 GROUP BY c.c_uuid
+                 HAVING c.c_uuid=?;
                  '''
-    date = db.get_query(date_query)
+    for i in result:
+        date = db.get_query(date_query, (i['c_uuid'],), mul=False)
+        i.update(dict(date))
 
-
-    return jsonify(curator)
+    return jsonify(result)
 
 
 @api_plyy.route('/<id>')

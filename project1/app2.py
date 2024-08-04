@@ -94,7 +94,6 @@ def api_main_curator():
         for j in tags[:2]:
             tag.append(j['name'])
         i['tag'] = tag
-        print(tag)
 
     date_query = '''
                  SELECT
@@ -114,26 +113,29 @@ def api_main_curator():
 
 @api_plyy.route('/<id>')
 def api_plyy_detail(id):
-    info_query = '''
+    plyy_query = '''
                  SELECT
                  p.title,
                  c.name AS curator, 
                  STRFTIME('%Y-%m-%d', p.gen_date) AS 'generate',
                  STRFTIME('%Y-%m-%d', p.up_date) AS 'update',
-                 COUNT(*) AS heart,
                  g.name AS genre,
                  p.cmt AS comment  
                  FROM PLYY p 
                  JOIN CURATOR c ON p.c_id=c.id
-                 JOIN P_LIKE pl ON p.id=pl.p_id
                  JOIN GENRE g ON p.g_id=g.id 
                  WHERE p.id=? GROUP BY p.id;
                  '''
-    info = dict(db.get_query(info_query,(id,),mul=False))
+    plyy = dict(db.get_query(plyy_query, (id,), mul=False))
 
-    # # 플리 업데이트 날짜 NULL일 때
-    # if info['update'] is None:
-    #     info['update'] = info['generate']
+    heart_query = '''
+                  SELECT
+                  COUNT(*) AS heart
+                  FROM p_LIKE
+                  WHERE p_id=?;
+                  '''
+    heart = dict(db.get_query(heart_query, (id,), mul=False))
+    plyy['heart'] = heart['heart']
 
     tracks_query = '''
                    SELECT t.id,
@@ -154,11 +156,11 @@ def api_plyy_detail(id):
     tags = db.tag_query('plyy', id)
     tags = [dict(row) for row in tags]
 
-    return jsonify({'info': info, 'tracks': tracks, 'tags': tags})
+    return jsonify({'plyy': plyy, 'tracks': tracks, 'tags': tags})
 
 
-@api_plyy.route('/<plyy_id>/<song_num>')
-def api_song(plyy_id, song_num):
+@api_plyy.route('/<id>/<song_num>')
+def api_song(id, song_num):
     song_query = '''
                  SELECT 
                  t.title,
@@ -171,7 +173,7 @@ def api_song(plyy_id, song_num):
                  JOIN SONG s ON t.id=s.tk_id 
                  WHERE s.id=? AND s.num=?
                  '''
-    song = dict(db.get_query(song_query, (plyy_id,song_num), mul=False))
+    song = dict(db.get_query(song_query, (id,song_num), mul=False))
 
     total_query = '''
                   SELECT
@@ -179,7 +181,7 @@ def api_song(plyy_id, song_num):
                   FROM SONG
                   WHERE p_id=?
                   '''
-    total_index = dict(db.get_query(total_query, (plyy_id,), mul=False))
+    total_index = dict(db.get_query(total_query, (id,), mul=False))
 
     song['total_num'] = total_index['total']
     

@@ -1,7 +1,4 @@
-{% extends "base copy.html" %}
-{% block style %}
-<link rel="stylesheet" href="/static/css/base.css"/>
-{% endblock %}
+{% extends "base.html" %}
 
 {% block content %}
     <div>
@@ -27,7 +24,7 @@
 {% block script %}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var url = window.location.href;
+            let url = window.location.href;
             url = url.split('/');
             let plyyId = url[url.length - 1];
             fetchPlyyDetail(plyyId);
@@ -38,7 +35,7 @@
             .then(response =>  response.json())
             .then(data => {
                 total_rtime = 0;
-                document.title = data.info.plyy_title + ' | PLYY';
+                document.title = data.plyy.title + ' | PLYY';
                 const plyy_title = document.getElementById('plyy_title');
                 const date = document.getElementById('date');
                 const curator = document.getElementById('curator');
@@ -46,28 +43,28 @@
                 const total = document.getElementById('total');
                 const tagContainer = document.getElementById('tag_container');
                 const comment = document.getElementById('comment');
-                plyy_title.textContent = data.info.plyy_title;
-                if (data.info.generate < data.info.update) {
-                    date.innerHTML  = '수정일 : ' + data.info.update.replace(/-/g, '.');
+                plyy_title.textContent = data.plyy.title;
+                if (data.plyy.generate < data.plyy.update) {
+                    date.innerHTML  = '수정일 : ' + data.plyy.update.replace(/-/g, '.');
                 } else {
-                    date.innerHTML  = '발행일 : ' + data.info.generate.replace(/-/g, '.');
+                    date.innerHTML  = '발행일 : ' + data.plyy.generate.replace(/-/g, '.');
                 }
-                curator.innerHTML = '<p>큐레이터 : ' + data.info.curator + '</p>';
-                heart.innerHTML = '<img src="/static/source/heart_white.svg">' + data.info.heart;
-                comment.textContent = data.info.comment;
+                curator.innerHTML = '<p>큐레이터 : ' + data.plyy.curator + '</p>';
+                heart.innerHTML = '<img src="/static/source/heart_white.svg">' + data.heart;
+                comment.textContent = data.plyy.comment;
                 const genre = document.createElement('span');
-                genre.textContent = '#' + data.info.genre;
+                genre.textContent = '#' + data.plyy.genre;
                 tagContainer.appendChild(genre);
                 data.tags.forEach(data => {
                     const tag = document.createElement('span');
-                    tag.textContent = '#' + data.tag_name;
+                    tag.textContent = '#' + data.name;
                     tagContainer.appendChild(tag);
                 });
                 const lst = document.getElementById('tracks')
                 data.tracks.forEach(track => {
                     const newItem = document.createElement('ul');
                     newItem.innerHTML = 
-                        `<div onclick="location.href='./${plyyId}/${parseInt(track.song_index) + 1}'">` +
+                        `<div onclick="location.href='./${plyyId}/${parseInt(track.num) + 1}'">` +
                             '<div>' +
                                 '<div>' + `<img src="${track.img}">` +
                                     '<div>' + 
@@ -75,23 +72,17 @@
                                         '<p lang="ko">' + `${track.artist}` + '</p>' +
                                     '</div>' +
                                 '</div>' +
-                                    '<div>' + `${String(song_time(track.track_rtime))}` + '</div>' +
+                                    '<div>' + `${String(song_time(track.rtime))}` + '</div>' +
                             '</div>' +
                         '</div>';
                     lst.appendChild(newItem);
-                    total_rtime = total_rtime + parseInt(track.track_rtime);
+                    total_rtime = total_rtime + parseInt(track.rtime);
                 })
                 total.innerHTML = data.tracks.length + '곡 | ' + plyy_time(total_rtime);
             })
             .catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
         };
 
-        // window.onload = function() {
-        //     let url = window.location.href
-        //     url = url.split('/')
-        //     let plyyId = url[url.length - 1]
-        //     fetchPlyyDetail(plyyId);
-        // };
         </script>
         <script src="/static/js/runtime.js"></script>
 {% endblock %}

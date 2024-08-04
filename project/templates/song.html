@@ -25,7 +25,7 @@
 {% block script %}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var url = window.location.href;
+            let url = window.location.href;
             url = url.split('/');
             let plyyId = url[url.length - 2];
             let song_index = url[url.length - 1] - 1;

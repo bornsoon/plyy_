@@ -25,36 +25,36 @@
 {% block script %}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var url = window.location.href;
+            let url = window.location.href;
             url = url.split('/');
             let plyyId = url[url.length - 2];
-            let song_index = url[url.length - 1] - 1;
-            fetchSong(plyyId, song_index);
+            let song_num = url[url.length - 1] - 1;
+            fetchSong(plyyId, song_num);
         });
         
-        function fetchSong(plyyId, song_index) {
-            fetch(`/api/plyy/${plyyId}/${song_index}`)
+        function fetchSong(plyyId, song_num) {
+            fetch(`/api/plyy/${plyyId}/${song_num}`)
             .then(response =>  response.json())
-            .then(data => {
-                document.title =  data.title + ' | PLYY';
+            .then(track => {
+                document.title =  track.title + ' | PLYY';
                 const video = document.getElementById('video');
                 const image = document.getElementById('image');
                 const page = document.getElementById('page');
                 const song_title = document.getElementById('song_title');
                 const artist = document.getElementById('song_artist');
                 const album = document.getElementById('song_album');
-                if (data.comment) {
+                if (track.comment) {
                     newItem = document.createElement('div');
                     const song_comment = document.getElementById('song_comment');
-                    newItem.textContent = data.comment;
+                    newItem.textContent = track.comment;
                     song_comment.appendChild(newItem);
                 }
-                video.setAttribute('src', `${data.song_vid}`);
-                image.setAttribute('src', `${data.img}`);
-                page.textContent = song_index + 1 + ' / ' + data.total_index;
-                song_title.textContent = data.title;
-                artist.textContent = data.artist;
-                album.textContent = data.album
+                video.setAttribute('src', `${track.vid}`);
+                image.setAttribute('src', `${track.img}`);
+                page.textContent = song_num + 1 + ' / ' + track.total_index;
+                song_title.textContent = track.title;
+                artist.textContent = track.artist;
+                album.textContent = track.album
             })
             .catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
         };

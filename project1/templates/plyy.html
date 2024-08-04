@@ -43,14 +43,16 @@
                 const total = document.getElementById('total');
                 const tagContainer = document.getElementById('tag_container');
                 const comment = document.getElementById('comment');
+                console.log(plyy_title)
+                console.log(comment)
                 plyy_title.textContent = data.plyy.title;
-                if (data.plyy.generate < data.plyy.update) {
+                if (data.plyy.update) {
                     date.innerHTML  = '수정일 : ' + data.plyy.update.replace(/-/g, '.');
                 } else {
                     date.innerHTML  = '발행일 : ' + data.plyy.generate.replace(/-/g, '.');
                 }
                 curator.innerHTML = '<p>큐레이터 : ' + data.plyy.curator + '</p>';
-                heart.innerHTML = '<img src="/static/source/heart_white.svg">' + data.heart;
+                heart.innerHTML = '<img src="/static/source/heart_white.svg">' + data.plyy.heart;
                 comment.textContent = data.plyy.comment;
                 const genre = document.createElement('span');
                 genre.textContent = '#' + data.plyy.genre;

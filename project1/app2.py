@@ -1,5 +1,4 @@
 import database as db
-import pandas as pd
 from flask import Blueprint, jsonify, render_template
 
 main = Blueprint('main', __name__)
@@ -27,12 +26,12 @@ def song_detail(id, song_index):
 def api_main_tag():
     query = '''
             SELECT
-            tag_name AS tag
+            name AS tag
             FROM TAG
             UNION
             SELECT
-            gtag_name AS tag
-            FROM TAG_GENRE
+            name AS tag
+            FROM GENRE
             '''
     tags = db.get_query(query)
     result = [dict(row) for row in tags]
@@ -44,30 +43,30 @@ def api_main_tag():
 def api_main_plyy():
     query = '''
             SELECT
-            p.plyy_uuid,
-            p.plyy_title,
-            p.plyy_img,
-            strftime('%Y-%m-%d', plyy_gen_date) AS 'generate',
-            strftime('%Y-%m-%d', plyy_update_date) AS 'update',
-            c.c_name AS curator,
-            g.gtag_name AS genre,
-            COUNT(s.song_index) AS tracks,
-            SUM(t.track_rtime) AS times
+            p.id,
+            p.title,
+            p.img,
+            STRFTIME('%Y-%m-%d', p.gen_date) AS 'generate',
+            STRFTIME('%Y-%m-%d', p.up_date) AS 'update',
+            c.name AS curator,
+            g.name AS genre,
+            COUNT(s.num) AS tracks,
+            SUM(t.rtime) AS times
             FROM PLYY p
-            JOIN CURATOR c ON p.c_uuid=c.c_uuid
-            JOIN TAG_GENRE g ON p.gtag_uuid=g.gtag_uuid
-            JOIN SONG s ON p.plyy_uuid=s.plyy_uuid
-            JOIN TRACK t ON s.track_uuid=t.track_uuid
-            GROUP BY p.plyy_uuid;
+            JOIN CURATOR c ON p.c_id=c.id
+            JOIN GENRE g ON p.g_id=g.id
+            JOIN SONG s ON p.id=s.p_id
+            JOIN TRACK t ON s.tk_id=t.id
+            GROUP BY p.id;
             '''
     plyys = db.get_query(query)
     result = [dict(row) for row in plyys]
 
     for i in result:
-        tag = db.tag_query('plyy', i['plyy_uuid'], mul=False)
+        tag = db.tag_query('plyy', i['id'], mul=False)
         if tag:
             tag = dict(tag)
-            i['tag'] = tag['tag_name']
+            i['tag'] = tag['name']
         else:
             i['tag'] = ''
     
@@ -79,35 +78,35 @@ def api_main_plyy():
 def api_main_curator():
     query = '''
             SELECT
-            c_uuid,
-            c_name,
-            c_img,
-            c_intro
+            id,
+            name,
+            img,
+            intro
             FROM CURATOR
-            GROUP BY c_uuid;
+            GROUP BY id;
             '''
     curators = db.get_query(query)
     result = [dict(row) for row in curators]
     
     for i in result:
-        print(i['c_name'])
-        tags = db.tag_query('curator', i['c_uuid'])
+        tags = db.tag_query('curator', i['id'])
         tag = []
-        for j in tags[:1]:
-            tag.append(j['tag_name'])
-        i['c_tag'] = tag
+        for j in tags[:2]:
+            tag.append(j['name'])
+        i['tag'] = tag
+        print(tag)
 
     date_query = '''
                  SELECT
-                 MAX(strftime('%Y-%m-%d', p.plyy_gen_date)) AS generate,
-                 MAX(strftime('%Y-%m-%d', p.plyy_update_date)) AS 'update'
+                 MAX(STRFTIME('%Y-%m-%d', p.gen_date)) AS generate,
+                 MAX(STRFTIME('%Y-%m-%d', p.up_date)) AS 'update'
                  FROM PLYY p
-                 JOIN CURATOR c ON p.c_uuid=c.c_uuid
-                 GROUP BY c.c_uuid
-                 HAVING c.c_uuid=?;
+                 JOIN CURATOR c ON p.c_id=c.id
+                 GROUP BY c.id
+                 HAVING c.id=?;
                  '''
     for i in result:
-        date = db.get_query(date_query, (i['c_uuid'],), mul=False)
+        date = db.get_query(date_query, (i['id'],), mul=False)
         i.update(dict(date))
 
     return jsonify(result)
@@ -117,18 +116,18 @@ def api_main_curator():
 def api_plyy_detail(id):
     info_query = '''
                  SELECT
-                 p.plyy_title,
-                 c.c_name AS curator, 
-                 strftime('%Y-%m-%d', plyy_gen_date) AS 'generate',
-                 strftime('%Y-%m-%d', plyy_update_date) AS 'update',
+                 p.title,
+                 c.name AS curator, 
+                 STRFTIME('%Y-%m-%d', p.gen_date) AS 'generate',
+                 STRFTIME('%Y-%m-%d', p.up_date) AS 'update',
                  COUNT(*) AS heart,
-                 g.gtag_name AS genre,
-                 plyy_cmt AS comment  
+                 g.name AS genre,
+                 p.cmt AS comment  
                  FROM PLYY p 
-                 JOIN CURATOR c ON p.c_uuid=c.c_uuid
-                 JOIN PLYY_LIKE pl ON p.plyy_uuid=pl.plyy_uuid
-                 JOIN TAG_GENRE g ON p.gtag_uuid=g.gtag_uuid 
-                 WHERE p.plyy_uuid=? GROUP BY p.plyy_uuid;
+                 JOIN CURATOR c ON p.c_id=c.id
+                 JOIN P_LIKE pl ON p.id=pl.p_id
+                 JOIN GENRE g ON p.g_id=g.id 
+                 WHERE p.id=? GROUP BY p.id;
                  '''
     info = dict(db.get_query(info_query,(id,),mul=False))
 
@@ -137,17 +136,17 @@ def api_plyy_detail(id):
     #     info['update'] = info['generate']
 
     tracks_query = '''
-                   SELECT t.track_uuid,
-                   t.track_title AS title,
-                   SUBSTR(t.track_album_img,6) AS img,
-                   t.track_album AS album,
-                   t.track_artist AS artist,
-                   s.song_index,
-                   t.track_rtime
+                   SELECT t.id,
+                   t.title,
+                   t.img,
+                   t.album,
+                   t.artist,
+                   s.num,
+                   t.rtime
                    FROM TRACK t 
-                   JOIN SONG s ON t.track_uuid=s.track_uuid
-                   JOIN PLYY p ON s.plyy_uuid=p.plyy_uuid 
-                   WHERE p.plyy_uuid=?;
+                   JOIN SONG s ON t.id=s.tk_id
+                   JOIN PLYY p ON s.p_id=p.id 
+                   WHERE p.id=?;
                    '''
     tracks = db.get_query(tracks_query,(id,))
     tracks = [dict(row) for row in tracks]
@@ -158,30 +157,30 @@ def api_plyy_detail(id):
     return jsonify({'info': info, 'tracks': tracks, 'tags': tags})
 
 
-@api_plyy.route('/<id>/<song_index>')
-def api_song(id, song_index):
+@api_plyy.route('/<plyy_id>/<song_num>')
+def api_song(plyy_id, song_num):
     song_query = '''
                  SELECT 
-                 t.track_title AS title,
-                 t.track_artist as artist,
-                 SUBSTR(t.track_album_img,6) AS img,
-                 t.track_album AS album,
-                 s.song_cmt AS comment,
-                 s.song_vid
+                 t.title,
+                 t.artist,
+                 t.img,
+                 t.album,
+                 s.cmt AS comment,
+                 s.vid
                  FROM TRACK t 
-                 JOIN SONG s ON t.track_uuid=s.track_uuid 
-                 WHERE s.plyy_uuid=? AND s.song_index=?
+                 JOIN SONG s ON t.id=s.tk_id 
+                 WHERE s.id=? AND s.num=?
                  '''
-    song = dict(db.get_query(song_query, (id,song_index), mul=False))
+    song = dict(db.get_query(song_query, (plyy_id,song_num), mul=False))
 
     total_query = '''
                   SELECT
-                  COUNT(song_uuid) AS total
+                  COUNT(id) AS total
                   FROM SONG
-                  WHERE plyy_uuid=?
+                  WHERE p_id=?
                   '''
-    total_index = dict(db.get_query(total_query, (id,), mul=False))
+    total_index = dict(db.get_query(total_query, (plyy_id,), mul=False))
 
-    song['total_index'] = total_index['total']
+    song['total_num'] = total_index['total']
     
     return jsonify(song)

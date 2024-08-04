@@ -60,10 +60,10 @@
                     let heartId = 'heart' + index; 
                     const plyyCard = document.createElement('li');
                     plyyCard.innerHTML = 
-                        `<a href="./plyy/${plyy.plyy_uuid}" class="plyy_card__info">` +
+                        `<a href="./plyy/${plyy.id}" class="plyy_card__info">` +
                             '<div class="plyy_card__thumb">' +
                                 `<div id="${dateTagId}" class="badge green"></div>` +
-                                `<img src="@static/images/plyy/${plyy.plyy_img}" class="plyy_card__thumb__large">` +
+                                `<img src="@static/images/plyy/${plyy.img}" class="plyy_card__thumb__large">` +
                                 '<div class="plyy_card__taglist">' +
                                     `<div class="badges tag"># ${plyy.genre}</div>` +
                                     `<div id="${plyyTagId}" class="badges tag"></div>` +
@@ -72,7 +72,7 @@
                             '</div>' +
                             '<div class="plyy_card__detail">' +
                                 '<div>' +
-                                    `<div class="plyy_card__detail--title">${plyy.plyy_title}</div>` +
+                                    `<div class="plyy_card__detail--title">${plyy.title}</div>` +
                                     '<div class="align both">' +
                                         `<div class="plyy_card__detail--cname">${plyy.curator}</div>` +
                                         `<div class="plyy_card__detail--count">${plyy.tracks}곡 | ${plyy_time(plyy.times)}</div>` +
@@ -126,10 +126,10 @@
                     let heartId = 'heart' + index;
                     const curatorCard = document.createElement('li');
                     curatorCard.innerHTML =
-                        `<a href="./curator/${c.c_uuid}" class="curator_card__info">` +
+                        `<a href="./curator/${c.id}" class="curator_card__info">` +
                             '<div class="curator_card__thumb">' +
                                 `<div id="${updateTagId}" class="badge green">UPDATE</div>` +
-                                `<img src="@static/images/curator/${c.c_img}" class="curator_card__thumb__large">` +
+                                `<img src="static/images/curator/${c.img}" class="curator_card__thumb__large">` +
                                 '<div class="curator_card__taglist">' +
                                     `<div id="${curatorTagId1}" class="badges tag"></div>` +
                                     `<div id="${curatorTagId2}" class="badges tag"></div>` +
@@ -138,9 +138,9 @@
                             '</div>' +
                             '<div class="curator_card__detail">' +
                                 '<div>' +
-                                    `<div class="curator_card__detail--title">${c.c_name}</div>` +
+                                    `<div class="curator_card__detail--title">${c.name}</div>` +
                                     '<div class="align both">' +
-                                        `<div class="curator_card__detail--cintro">${c.c_intro}</div>` +
+                                        `<div class="curator_card__detail--cintro">${c.intro}</div>` +
                                     '</div>' +
                                 '</div>' +
                             '</div>' +
@@ -158,12 +158,11 @@
                     let curatorTag1 = document.getElementById(curatorTagId1);
                     let curatorTag2 = document.getElementById(curatorTagId2);
                     let tag = [curatorTag1, curatorTag2];
-                    console.log(c.c_name +' '+ !(c.c_tag))
-                    if (c.c_tag == '') {
+                    if (c.tag == '') {
                         tag[0].style.visibility = "hidden";
                         tag[1].style.visibility = "hidden";
                     }
-                    c.c_tag.forEach((element, index) => {
+                    c.tag.forEach((element, index) => {
                         if (element == '') {
                             tag[index].style.visibility = "hidden";
                         } else {

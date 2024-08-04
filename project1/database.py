@@ -2,7 +2,7 @@ import sqlite3
 import os
 
 def connect_db():
-    database_path = os.path.join(os.path.dirname(__file__), 'plyy.db')
+    database_path = os.path.join(os.path.dirname(__file__), 'plyy_v4.db')
     conn = sqlite3.connect(database_path)
     conn.execute('PRAGMA foreign_keys = ON')
     conn.row_factory = sqlite3.Row
@@ -40,19 +40,19 @@ def tag_query(category, id, mul=True):
     if category.lower() == 'plyy':
         query = '''
                 SELECT
-                t.tag_name 
+                t.name 
                 FROM TAG t 
-                JOIN TAG_PLYY tp ON t.tag_uuid=tp.tag_uuid
-                WHERE tp.plyy_uuid=?
+                JOIN P_TAG pt ON t.id=pt.id
+                WHERE pt.p_id=?
                 '''
 
     elif category.lower() == 'curator':
         query = '''
                 SELECT
-                t.tag_name
+                t.name
                 FROM TAG t
-                JOIN TAG_CURATOR tc ON t.tag_uuid=tc.tag_uuid
-                WHERE tc.c_uuid=?
+                JOIN C_TAG ct ON t.id=ct.id
+                WHERE ct.c_id=?
                 '''
         
     tags = get_query(query, (id,), mul)

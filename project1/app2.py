@@ -180,7 +180,7 @@ def api_song(id, song_num):
                     s.vid
                     FROM TRACK t 
                     JOIN SONG s ON t.id=s.tk_id 
-                    WHERE s.id=? AND s.num=?
+                    WHERE s.p_id=? AND s.num=?
                     '''
         result = dict(db.get_query(song_query, (id,song_num), mul=False))
 

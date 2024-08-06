@@ -12,11 +12,12 @@
     {% block header %}
     <header class="header">
         <div class="align both">
-            <div><button class="btn-logo" onclick="location.href='/'"></button></div>
-            <div class="header-icon-group align both">
-                <button class="btn-bell"><span></span></button> <!-- 새알림 있을 때 dot 필요-->
-                <button class="btn-like"></button>
-                <button class="btn-profile"></button>
+            <div><button class="btn-logo" aria-label="플리 로고" onclick="location.href='/'"></button></div>
+            <div class="header__icon-group">
+                <button class="btn-bell--default" aria-label="알림 없음"></button>
+                <!-- <button class="btn-bell--new" aria-label="새로운 알림 있음"></button> -->
+                <button class="btn-mylikes" aria-label="나의 좋아요"></button>
+                <button class="btn-myprofile" aria-label="내 프로필"></button>
             </div>
         </div>
     </header>
@@ -25,7 +26,7 @@
     
     
     <!-- 메인 -->
-    <main>
+    <main class="main">
         <div class="main_container">
         {% block container %}
         
@@ -39,11 +40,13 @@
         </div>
     </main>
     
-    <!-- 푸터 -->
+    <!-- 푸터 : 현재 이미지 박아넣음. 추후 컴포넌트화 필요-->
     {% block footer %}
-    <div class="footer_container">
-        <footer class="footer"></footer>
-    </div>
+    <footer class="footer">
+        <div>
+            <div class="footer__img"></div>
+        </div>
+    </footer>
     {% endblock %}
     
     <!-- 스크립트 -->

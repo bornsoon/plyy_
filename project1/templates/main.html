@@ -1,27 +1,27 @@
 {% extends "base_search.html" %}
 
-<!-- div class="m16" -->
+<!-- div class="main__container" -->
     <!-- 추천 태그 -->
     {% block tag %}
-        <nav>
-            <ul class="search_by_tag" id="tag"></ul>
+        <nav class="vertical-scroll">
+            <ul class="search-tags" id="tag"></ul>
         </nav>
     {% endblock %}
 
-    <!-- 토글바 -->
+    <!-- 메인 탭 -->
     {% block tab %}
-        <nav style="margin-top: 32px;">
-            <ul class="tab-type1">
-                <li class="tab-type1--active" id="plyy_tab"><button>PLYY</button></li>
-                <li class="tab-type1--inactive" id="curator_tab"><button>CURATOR</button></li>
+        <nav>
+            <ul class="tab-type1" id="tab-type">
+                <li><button class="h2" id="plyy_tab">PLYY</button></li>
+                <li class="tab-type1--deactive" id="curator_tab"><button class="h2">CURATOR</button></li>
             </ul>
         </nav>
     {% endblock %}
 <!-- /div -->
-
-    {% block content %}
-        <!-- 플리 & 큐레이터 카드 -->
-        <ul class="plyy_card_list" id="mainList"></ul>
+    
+    <!-- 플리 & 큐레이터 카드 -->
+    {% block content %}      
+        <ul class="plyy-card mg32" id="mainList"></ul>
     {% endblock %}
 
 {% block script %}
@@ -40,7 +40,7 @@
                 const searchByTag = document.getElementById('tag')
                 data.forEach(data => {
                     const newItem = document.createElement('li');
-                    newItem.textContent = '# ' + data.tag;
+                    newItem.innerHTML = '<a class="fs12 badge tag"># ' + data.tag + '</a>';
                     searchByTag.appendChild(newItem);
                 })
             }).catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
@@ -60,34 +60,33 @@
                     let heartId = 'heart' + index; 
                     const plyyCard = document.createElement('li');
                     plyyCard.innerHTML = 
-                        `<a href="./plyy/${plyy.id}" class="plyy_card__info">` +
-                            '<div class="plyy_card__thumb">' +
-                                `<div id="${dateTagId}" class="badge green"></div>` +
-                                `<img src="@static/images/plyy/${plyy.img}" class="plyy_card__thumb__large">` +
-                                '<div class="plyy_card__taglist">' +
-                                    `<div class="badges tag"># ${plyy.genre}</div>` +
-                                    `<div id="${plyyTagId}" class="badges tag"></div>` +
+                        `<a href="./plyy/${plyy.id}">` +
+                            '<div class="plyy-card__top">' +
+                                `<img src="static/images/${plyy.img}" alt="" class="plyy-card__top__img">` +
+                                `<div id="${dateTagId}" class="badge green"></div>` + 
+                                '<div class="plyy-card__top__tag-list">' +
+                                    `<div class="badge tag"># ${plyy.genre}</div>` +
+                                    `<div id="${plyyTagId}" class="badge tag"></div>` +
                                 '</div>' +
-                                `<button class="btn-plike__true" id=${heartId} aria-label="플레이리스트 좋아요"></button>` +
+                                `<button class="btn-plike--unfill" id=${heartId} aria-label="플레이리스트 좋아요 즐겨찾기"></button>` +
                             '</div>' +
-                            '<div class="plyy_card__detail">' +
+                            '<div class="plyy-card__bottom">' +
                                 '<div>' +
-                                    `<div class="plyy_card__detail--title">${plyy.title}</div>` +
+                                    `<div class="plyy-card__bottom__title fs16"><span class="hide">${plyy.title}</span>${plyy.title}</div>` +
                                     '<div class="align both">' +
-                                        `<div class="plyy_card__detail--cname">${plyy.curator}</div>` +
-                                        `<div class="plyy_card__detail--count">${plyy.tracks}곡 | ${plyy_time(plyy.times)}</div>` +
+                                        `<div class="plyy-card__bottom--cname fs12"><span class="hide">${plyy.curator}</span>${plyy.curator}</div>` +
+                                        `<div class="plyy-card__bottom--count fs12"><span class="hide">${plyy.tracks}곡 | ${plyy_time(plyy.times)}</span>${plyy.tracks}곡 | ${plyy_time(plyy.times)}</div>` +
                                     '</div>' +
                                 '</div>' +
                             '</div>' +
                         '</a>';
-
                     plyyList.appendChild(plyyCard);
 
                     // NEW | UPDATE 태그
                     let dateTag = document.getElementById(dateTagId);
                     isDate = isTag(plyy.generate, plyy.update);
                     if (isDate) {
-                        dateTag.textContent = isDate;
+                        dateTag.innerHTML = '<span class="hide">' + isDate + '</span>' + isDate;
                     } else {
                         dateTag.style.visibility = "hidden";
                     };
@@ -126,21 +125,21 @@
                     let heartId = 'heart' + index;
                     const curatorCard = document.createElement('li');
                     curatorCard.innerHTML =
-                        `<a href="./curator/${c.id}" class="curator_card__info">` +
-                            '<div class="curator_card__thumb">' +
-                                `<div id="${updateTagId}" class="badge green">UPDATE</div>` +
-                                `<img src="static/images/curator/${c.img}" class="curator_card__thumb__large">` +
-                                '<div class="curator_card__taglist">' +
-                                    `<div id="${curatorTagId1}" class="badges tag"></div>` +
-                                    `<div id="${curatorTagId2}" class="badges tag"></div>` +
+                        `<a href="./curator/${c.id}">` +
+                            '<div class="curator-card__top">' +
+                                `<img src="static/images/${c.img}" alt="" class="curator-card__top__img">` +
+                                `<div id="${updateTagId}" class="badge green"><span class="hide">UPDATE</span>UPDATE</div>` +
+                                '<div class="curator-card__top__tag-list">' +
+                                    `<div id="${curatorTagId1}" class="badge tag"></div>` +
+                                    `<div id="${curatorTagId2}" class="badge tag"></div>` +
                                 '</div>' +
-                                `<button class="btn-clike__true" id=${heartId} aria-label="큐레이터 좋아요"></button>` +
+                                `<button class="btn-clike--unfill" id=${heartId} aria-label="큐레이터 좋아요 즐겨찾기"></button>` +
                             '</div>' +
-                            '<div class="curator_card__detail">' +
+                            '<div class="curator-card__bottom">' +
                                 '<div>' +
-                                    `<div class="curator_card__detail--title">${c.name}</div>` +
+                                    `<div class="curator-card__bottom__title fs16"><span class="hide">${c.name}</span>${c.name}</div>` +
                                     '<div class="align both">' +
-                                        `<div class="curator_card__detail--cintro">${c.intro}</div>` +
+                                        `<div class="curator-card__bottom__intro fs12"><span class="hide">${c.intro}</span>${c.intro}</div>` +
                                     '</div>' +
                                 '</div>' +
                             '</div>' +
@@ -190,17 +189,21 @@
 
         plyyTag = document.getElementById('plyy_tab');
         curatorTag = document.getElementById('curator_tab');
-
+        mainTab = document.getElementById('tab-type')
 
         plyyTag.addEventListener('click', function(event){
             clearList();
             fetchPlyy();
+            mainTab.classList.remove('tab-type2');
+            mainTab.classList.add('tab-type1');
         });
 
 
         curatorTag.addEventListener('click', function(event){
             clearList();
             fetchCurator();
+            mainTab.classList.remove('tab-type1');
+            mainTab.classList.add('tab-type2');
         });
 
     </script>

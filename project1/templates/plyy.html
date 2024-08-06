@@ -1,23 +1,28 @@
-{% extends "base.html" %}
+{% extends "base_none.html" %}
 
-{% block content %}
+{% block container %}
+    <!-- 플리 상세 타이틀 : 줄바꿈 없음 -->
     <div>
-        <div class="plyy_title_box">
-            <div id="plyy_title"></div>
-            <div id="line"></div>
+        <div class="title-type1">
+            <div><p class="h2" id="plyy_title"></p></div>
         </div>
-            <div id="info">
-                <div id="date"></div>
-                <div id="curator"></div>
-                <div id="total"></div>
-                <div id="heart"></div>
+        <div class="plyy-info align both pd8">
+            <div class="fs12" id="date"></div>
+            <div class="fs12" id="curator"></div>
+            <div class="fs12" id="total"></div>
+        </div>
+    </div>
+    <!-- 플리 상세 목록 -->
+    <div class="plyy">
+        <div class="plyy__top">
+            <div>
+                <ul class="plyy__top__tag" id="tag_container"></ul>
             </div>
-            <div class="plyy_container">
-                <div id="tag_container"></div>
-                <div id="comment" class="comment"></div>
-                <hr style="border:0px; height:4px; background:#F15A22; width: 100%;">
-                <li class="pointer" id="tracks"></li>
-            </div>
+            <div class="plyy__top__intro pretendard" id="comment"></div>
+        </div>
+        <div class="plyy__bottom">
+            <ul class="plyy__bottom__song-list" id="tracks"></ul>
+        </div>
     </div>
 {% endblock %}
 
@@ -36,47 +41,45 @@
             .then(data => {
                 total_rtime = 0;
                 document.title = data.plyy.title + ' | PLYY';
-                const plyy_title = document.getElementById('plyy_title');
+                const plyyTitle = document.getElementById('plyy_title');
                 const date = document.getElementById('date');
                 const curator = document.getElementById('curator');
                 const heart = document.getElementById('heart');
                 const total = document.getElementById('total');
                 const tagContainer = document.getElementById('tag_container');
                 const comment = document.getElementById('comment');
-                console.log(plyy_title)
-                console.log(comment)
-                plyy_title.textContent = data.plyy.title;
+                plyyTitle.textContent = data.plyy.title;
                 if (data.plyy.update) {
                     date.innerHTML  = '수정일 : ' + data.plyy.update.replace(/-/g, '.');
                 } else {
                     date.innerHTML  = '발행일 : ' + data.plyy.generate.replace(/-/g, '.');
                 }
-                curator.innerHTML = '<p>큐레이터 : ' + data.plyy.curator + '</p>';
-                heart.innerHTML = '<img src="/static/source/heart_white.svg">' + data.plyy.heart;
+                curator.innerHTML = '큐레이터 : ' + data.plyy.curator;
                 comment.textContent = data.plyy.comment;
-                const genre = document.createElement('span');
-                genre.textContent = '#' + data.plyy.genre;
+                const genre = document.createElement('li');
+                genre.textContent = '# ' + data.plyy.genre;
+                genre.classList.add('badge', 'tag', 'fs12');
                 tagContainer.appendChild(genre);
                 data.tags.forEach(data => {
-                    const tag = document.createElement('span');
-                    tag.textContent = '#' + data.name;
+                    const tag = document.createElement('li');
+                    tag.textContent = '# ' + data.name;
+                    tag.classList.add('badge', 'tag', 'fs12');
                     tagContainer.appendChild(tag);
                 });
                 const lst = document.getElementById('tracks')
                 data.tracks.forEach(track => {
-                    const newItem = document.createElement('ul');
-                    newItem.innerHTML = 
-                        `<div onclick="location.href='./${plyyId}/${parseInt(track.num) + 1}'">` +
-                            '<div>' +
-                                '<div>' + `<img src="${track.img}">` +
-                                    '<div>' + 
-                                        '<b>' + '<p lang="ko">' + `${track.title}` + '</p>' + '</b>' +
-                                        '<p lang="ko">' + `${track.artist}` + '</p>' +
-                                    '</div>' +
-                                '</div>' +
-                                    '<div>' + `${String(song_time(track.rtime))}` + '</div>' +
+                    const newItem = document.createElement('li');
+                    newItem.innerHTML =
+                        `<a href="./${plyyId}/${parseInt(track.num) + 1}" class="plyy__bottom__song-list__card">` +
+                            '<div class="plyy__bottom__song-list__card__img">' + 
+                                `<img src="${track.img}">` +
                             '</div>' +
-                        '</div>';
+                            '<div class="plyy__bottom__song-list__card__info">' +
+                                '<div class="fs14-bold">' + track.title + '</div>' +
+                                '<div class="fs14">' + track.artist + '</div>' +
+                            '</div>' +
+                            '<div class="plyy__bottom__song-list__card__runtime fs14">' + `${String(song_time(track.rtime))}` + '</div>' +
+                        '</a';
                     lst.appendChild(newItem);
                     total_rtime = total_rtime + parseInt(track.rtime);
                 })

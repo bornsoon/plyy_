@@ -3,8 +3,8 @@
 {% block container %}
     {% block search %}
         <!-- 메인 검색창 : 디폴트 -->
-        <form class="search-type1 align both">
-            <input type="text" class="fs14" placeholder="검색어를 입력하세요">
+        <form class="search-type1 align both" action="/search" method="POST">
+            <input type="text" class="fs14" placeholder="검색어를 입력하세요" name="name">
             <div class="align both">
                 <button class="btn-hash" aria-label="해시태그 검색"></button>
                 <button class="btn-search" aria-label="검색"></button>
@@ -20,4 +20,16 @@
     {% endblock %}
     
     {% block content %}{% endblock %}
+{% endblock %}
+
+{% block search_script %}
+        <script>
+            function search() {
+                fetch('/api/search/')
+                .then(response => response.json())
+                .then(data => {
+
+                })
+            }
+        </script>
 {% endblock %}

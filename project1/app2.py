@@ -1,10 +1,11 @@
 import database as db
-from flask import Blueprint, jsonify, render_template
+from flask import Blueprint, jsonify, render_template, request
 
 main = Blueprint('main', __name__)
 plyy = Blueprint('plyy', __name__)
 api_main = Blueprint('api_main', __name__)
 api_plyy = Blueprint('api_plyy', __name__)
+api_search = Blueprint('api_search', __name__)
 
 
 @main.route('/')
@@ -39,7 +40,7 @@ def api_main_tag():
     return jsonify(result)
 
 
-@api_main.route('/plyy')
+@api_main.route('/plyy', methods=['POST'])
 def api_main_plyy():
     try:
         query = '''
@@ -114,6 +115,47 @@ def api_main_curator():
         print('큐레이터 목록을 불러오는데 실패했습니다.')
 
     return jsonify(result)
+
+
+@api_search.route('/search', methods=['POST'])
+def api_search_plyy_curator():
+    name = request.form['name']
+    try:
+        query = '''
+                SELECT
+                p.id,
+                p.title,
+                p.img,
+                STRFTIME('%Y-%m-%d', p.gen_date) AS 'generate',
+                STRFTIME('%Y-%m-%d', p.up_date) AS 'update',
+                c.name AS curator,
+                g.name AS genre,
+                COUNT(s.num) AS tracks,
+                SUM(t.rtime) AS times
+                FROM PLYY p
+                JOIN CURATOR c ON p.c_id=c.id
+                JOIN GENRE g ON p.g_id=g.id
+                JOIN SONG s ON p.id=s.p_id
+                JOIN TRACK t ON s.tk_id=t.id
+                WHERE p.title LIKE '%'||?||'%'
+                GROUP BY p.id;
+                '''
+        plyys = db.get_query(query,(name,))
+        result = [dict(row) for row in plyys]
+
+        for i in result:
+            tag = db.tag_query('plyy', i['id'], mul=False)
+            if tag:
+                tag = dict(tag)
+                i['tag'] = tag['name']
+            else:
+                i['tag'] = ''
+    except:
+        print('플레이리스트 목록을 불러오는데 실패했습니다.')
+    
+    return jsonify(result)
+
+
 
 
 @api_plyy.route('/<id>')

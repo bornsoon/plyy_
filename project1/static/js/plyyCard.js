@@ -4,7 +4,6 @@ function fetchPlyy() {
     .then(response =>  response.json())
     .then(data => {
         document.title = 'PLYY';
-        const plyyList = document.getElementById('mainList');
         data.forEach((plyy, index) => {
             let dateTagId = 'dateTag' + index;
             let plyyTagId = 'plyyTag' + index;
@@ -31,7 +30,7 @@ function fetchPlyy() {
                         '</div>' +
                     '</div>' +
                 '</a>';
-            plyyList.appendChild(plyyCard);
+            mainList.appendChild(plyyCard);
 
             // NEW | UPDATE 태그
             let dateTag = document.getElementById(dateTagId);

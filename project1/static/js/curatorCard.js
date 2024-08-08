@@ -4,7 +4,6 @@ function fetchCurator() {
     .then(response => response.json())
     .then(data => {
         document.title = 'PLYY | CURATOR';
-        const curatorList = document.getElementById('mainList');
         data.forEach((c, index) => {
             let updateTagId = 'updateTag' + index;
             let curatorTagId1 = 'curatorTag1' + index;
@@ -31,7 +30,7 @@ function fetchCurator() {
                         '</div>' +
                     '</div>' +
                 '</a>';
-            curatorList.appendChild(curatorCard); 
+            mainList.appendChild(curatorCard); 
             
             // UPDATE 태그
             let updateTag = document.getElementById(updateTagId);

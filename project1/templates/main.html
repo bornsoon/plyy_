@@ -26,6 +26,8 @@
 
 {% block script %}
     <script>   
+        let tab_status = 'plyy';
+        const mainList = document.getElementById('mainList');
         document.addEventListener('DOMContentLoaded', function() {
             fetchTag();
             fetchPlyy();
@@ -45,16 +47,8 @@
             }).catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
         };
 
-        
-        // 플리 카드
-        fetchPlyy();
-        
-        // 큐레이터 카드
-        fetchCurator();
-
 
         function clearList(){
-            const mainList = document.getElementById('mainList');
             while(mainList.firstChild)
                 mainList.removeChild(mainList.firstChild);
         };
@@ -67,6 +61,7 @@
         plyyTag.addEventListener('click', function(event){
             clearList();
             fetchPlyy();
+            tab_status = 'plyy';
             mainTab.classList.remove('tab-type2');
             mainTab.classList.add('tab-type1');
         });
@@ -75,6 +70,7 @@
         curatorTag.addEventListener('click', function(event){
             clearList();
             fetchCurator();
+            tab_status = 'curator';
             mainTab.classList.remove('tab-type1');
             mainTab.classList.add('tab-type2');
         });

@@ -40,7 +40,7 @@ def api_main_tag():
     return jsonify(result)
 
 
-@api_main.route('/plyy', methods=['POST'])
+@api_main.route('/plyy', methods=['GET', 'POST'])
 def api_main_plyy():
     try:
         query = '''

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block container %}
+    {% block search %}
+        <!-- 메인 검색창 : 디폴트 -->
+        <form class="search-type1 align both">
+            <input type="text" class="fs14" placeholder="검색어를 입력하세요">
+            <div class="align both">
+                <button class="btn-hash" aria-label="해시태그 검색"></button>
+                <button class="btn-search" aria-label="검색"></button>
+            </div>
+        </form>
+
+        <!-- 태그바 -->
+        {% block tag %}{% endblock %}
+
+        <!-- 토글바 -->
+        {% block tab %}{% endblock %}
+        
+    {% endblock %}
+    
+    {% block content %}{% endblock %}
+{% endblock %}

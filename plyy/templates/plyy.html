@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block container %}
+    <!-- 플리 상세 타이틀 : 줄바꿈 없음 -->
+    <div>
+        <div class="title-type1">
+            <div><p class="h2" id="plyy_title"></p></div>
+        </div>
+        <div class="plyy-info align both pd8">
+            <div class="fs12" id="date"></div>
+            <div class="fs12" id="curator"></div>
+            <div class="fs12" id="total"></div>
+        </div>
+    </div>
+    <!-- 플리 상세 목록 -->
+    <div class="plyy">
+        <div class="plyy__top">
+            <div>
+                <ul class="plyy__top__tag" id="tag_container"></ul>
+            </div>
+            <div class="plyy__top__intro pretendard" id="comment"></div>
+        </div>
+        <div class="plyy__bottom">
+            <ul class="plyy__bottom__song-list" id="tracks"></ul>
+        </div>
+    </div>
+
+    <!-- 플리상세 플로팅 바 -->
+    <div class="fixed-floating">
+        <div class="floating-plyy">
+            <div><button class="btn__float__arrow__left" aria-label="뒤로가기"></button></div>
+            <div class="like-group">
+                <button class="btn__float__like" aria-label="플레이리스트 좋아요 수"></button>
+                <span class="fs12" id = 'plike'></span>
+            </div>
+            <div><button class="btn__float__share--black" aria-label="플레이리스트 공유하기"></button></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let url = window.location.href;
+            url = url.split('/');
+            let plyyId = url[url.length - 1];
+            fetchPlyyDetail(plyyId);
+        });
+        
+        function fetchPlyyDetail(plyyId) {
+            fetch(`/api/plyy/${plyyId}`)
+            .then(response =>  response.json())
+            .then(data => {
+                total_rtime = 0;
+                document.title = data.plyy.title + ' | PLYY';
+                const plyyTitle = document.getElementById('plyy_title');
+                const date = document.getElementById('date');
+                const curator = document.getElementById('curator');
+                const plike = document.getElementById('plike');
+                const total = document.getElementById('total');
+                const tagContainer = document.getElementById('tag_container');
+                const comment = document.getElementById('comment');
+                plyyTitle.textContent = data.plyy.title;
+                plike.textContent = data.plyy.heart;
+                if (data.plyy.update) {
+                    date.innerHTML  = '수정일 : ' + data.plyy.update.replace(/-/g, '.');
+                } else {
+                    date.innerHTML  = '발행일 : ' + data.plyy.generate.replace(/-/g, '.');
+                }
+                curator.innerHTML = '큐레이터 : ' + data.plyy.curator;
+                comment.textContent = data.plyy.comment;
+                const genre = document.createElement('li');
+                genre.textContent = '# ' + data.plyy.genre;
+                genre.classList.add('badge', 'tag', 'fs12');
+                tagContainer.appendChild(genre);
+                data.tags.forEach(data => {
+                    const tag = document.createElement('li');
+                    tag.textContent = '# ' + data.name;
+                    tag.classList.add('badge', 'tag', 'fs12');
+                    tagContainer.appendChild(tag);
+                });
+                const lst = document.getElementById('tracks')
+                data.tracks.forEach(track => {
+                    const newItem = document.createElement('li');
+                    newItem.innerHTML =
+                        `<a href="./${plyyId}/${parseInt(track.num) + 1}" class="plyy__bottom__song-list__card">` +
+                            '<div class="plyy__bottom__song-list__card__img">' + 
+                                `<img src="${track.img}">` +
+                            '</div>' +
+                            '<div class="plyy__bottom__song-list__card__info">' +
+                                '<div class="fs14-bold">' + track.title + '</div>' +
+                                '<div class="fs14">' + track.artist + '</div>' +
+                            '</div>' +
+                            '<div class="plyy__bottom__song-list__card__runtime fs14">' + `${String(song_time(track.rtime))}` + '</div>' +
+                        '</a';
+                    lst.appendChild(newItem);
+                    total_rtime = total_rtime + parseInt(track.rtime);
+                })
+                total.innerHTML = data.tracks.length + '곡 | ' + plyy_time(total_rtime);
+            })
+            .catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
+        };
+
+        </script>
+        <script src="/static/js/runtime.js"></script>
+{% endblock %}

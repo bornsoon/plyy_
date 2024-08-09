@@ -1,6 +1,6 @@
 import database as db
-from flask import Blueprint, jsonify, render_template,session
-from models import curator_info, curatorlike_status, curator_like, curator_unlike, plyy_like, plyy_unlike, plyylike_status, cu_plyy
+from flask import Blueprint, jsonify, render_template, session
+from models import curatorlike_status, plyylike_status, tag_query
 from utils import extract_user
 
 main = Blueprint('main', __name__)
@@ -66,7 +66,7 @@ def api_main_plyy():
         result = [dict(row) for row in plyys]
 
         for i in result:
-            tag = db.tag_query('plyy', i['id'], mul=False)
+            tag = tag_query('plyy', i['id'], mul=False)
             if tag:
                 tag = dict(tag)
                 i['tag'] = tag['name']
@@ -105,7 +105,7 @@ def api_main_curator():
         result = [dict(row) for row in curators]
         
         for i in result:
-            tags = db.tag_query('curator', i['id'])
+            tags = tag_query('curator', i['id'])
             tag = []
             for j in tags[:2]:
                 tag.append(j['name'])
@@ -181,7 +181,7 @@ def api_plyy_detail(id):
         tracks = db.get_query(tracks_query,(id,))
         tracks = [dict(row) for row in tracks]
 
-        tags = db.tag_query('plyy', id)
+        tags = tag_query('plyy', id)
         tags = [dict(row) for row in tags]
     except:
         print('해당 플레이리스트의 상세정보 페이지가 존재하지 않습니다.')

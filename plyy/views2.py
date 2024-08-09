@@ -1,12 +1,13 @@
 import database as db
 from flask import Blueprint, jsonify, render_template, session
-from models import curatorlike_status, plyylike_status, tag_query
+from models import curatorlike_status, plyylike_status, tag_query, plyy_query
 from utils import extract_user
 
 main = Blueprint('main', __name__)
 plyy = Blueprint('plyy', __name__)
 api_main = Blueprint('api_main', __name__)
 api_plyy = Blueprint('api_plyy', __name__)
+api_c_plyy = Blueprint('api_c_plyy', __name__)
 
 
 @main.route('/')
@@ -43,49 +44,13 @@ def api_main_tag():
 
 @api_main.route('/plyy')
 def api_main_plyy():
-    try:
-        query = '''
-                SELECT
-                p.id,
-                p.title,
-                p.img,
-                STRFTIME('%Y-%m-%d', p.gen_date) AS 'generate',
-                STRFTIME('%Y-%m-%d', p.up_date) AS 'update',
-                c.name AS curator,
-                g.name AS genre,
-                COUNT(s.num) AS tracks,
-                SUM(t.rtime) AS times
-                FROM PLYY p
-                JOIN CURATOR c ON p.c_id=c.id
-                JOIN GENRE g ON p.g_id=g.id
-                JOIN SONG s ON p.id=s.p_id
-                JOIN TRACK t ON s.tk_id=t.id
-                GROUP BY p.id;
-                '''
-        plyys = db.get_query(query)
-        result = [dict(row) for row in plyys]
+    result = plyy_query()
+    return jsonify(result)
 
-        for i in result:
-            tag = tag_query('plyy', i['id'], mul=False)
-            if tag:
-                tag = dict(tag)
-                i['tag'] = tag['name']
-            else:
-                i['tag'] = ''
 
-        pidlist = [i['id'] for i in result]
-
-        if 'id' in session and session['id']:
-            u_id = extract_user(session['id'])
-            if u_id:
-                p_isliked = plyylike_status(pidlist, u_id)
-                print(p_isliked)
-                for i in result:
-                    i['pliked'] = p_isliked.get(i['id'], False)
-
-    except:
-        print('플레이리스트 목록을 불러오는데 실패했습니다.')
-    
+@api_c_plyy.route('/<id>')
+def api_curator_plyy(id):
+    result = plyy_query('cid', id)
     return jsonify(result)
 
 

@@ -12,7 +12,7 @@
     {% block tab %}
         <nav>
             <ul class="tab-type1" id="tab-type">
-                <li><button class="h2" id="plyy_tab">PLYY</button></li>
+                <li id="plyy_tab"><button class="h2" id="plyy_tab">PLYY</button></li>
                 <li class="tab-type1--deactive" id="curator_tab"><button class="h2">CURATOR</button></li>
             </ul>
         </nav>
@@ -66,27 +66,31 @@
         };
 
 
-        plyyTag = document.getElementById('plyy_tab');
-        curatorTag = document.getElementById('curator_tab');
+        plyyTab = document.getElementById('plyy_tab');
+        curatorTab = document.getElementById('curator_tab');
         mainTab = document.getElementById('tab-type')
 
-        plyyTag.addEventListener('click', function(event){
+        plyyTab.addEventListener('click', function(event){
             document.title = 'PLYY';
             clearList();
             fetchPlyy('/api/main/plyy');
             tab_status = 'plyy';
             mainTab.classList.remove('tab-type2');
             mainTab.classList.add('tab-type1');
+            plyyTab.classList.remove('tab-type1--deactive');
+            curatorTab.classList.add('tab-type1--deactive');
         });
 
 
-        curatorTag.addEventListener('click', function(event){
+        curatorTab.addEventListener('click', function(event){
             document.title = 'PLYY | CURATOR';
             clearList();
             fetchCurator('/api/main/curator');
             tab_status = 'curator';
             mainTab.classList.remove('tab-type1');
             mainTab.classList.add('tab-type2');
+            curatorTab.classList.remove('tab-type1--deactive');
+            plyyTab.classList.add('tab-type1--deactive');
         });
 
     </script>

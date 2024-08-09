@@ -1,8 +1,7 @@
 # models.py
-from uuid import uuid4
-import sqlite3
-import os
 import database as db
+from utils import extract_user
+from flask import session
 
 
 def curator_info(id):
@@ -23,6 +22,7 @@ def curator_info(id):
     curator_tags.extend([ctags[i]['name'] for i in range(len(ctags))])
     curator_info.append(curator_tags)
     return curator_info
+
 
 def cu_plyy_tag(id, pid):
     plyy_tags = []
@@ -49,6 +49,7 @@ def cu_plyy_tag(id, pid):
 
     return plyy_tags
 
+
 def cu_plyy(id):
     plyy_list = []
 
@@ -61,6 +62,7 @@ def cu_plyy(id):
 
     return plyy_list
 
+
 def curatorlike_status(cidlist, u_id):
     
     clikestatus = []
@@ -70,6 +72,7 @@ def curatorlike_status(cidlist, u_id):
 
 
     return dict(zip(cidlist, clikestatus))
+
 
 def curator_like(c_id, u_id):
     try:
@@ -81,6 +84,7 @@ def curator_like(c_id, u_id):
         print(f"Error inserting like: {e}")
         db.roll()
         return False
+
 
 def curator_unlike(c_id, u_id):
     try:
@@ -95,6 +99,7 @@ def curator_unlike(c_id, u_id):
         db.roll()
         return False
 
+
 def plyylike_status(pidlist, u_id):
     plikestatus = []
     for pid in pidlist:
@@ -102,6 +107,7 @@ def plyylike_status(pidlist, u_id):
         plikestatus.append(bool(likes))
 
     return dict(zip(pidlist, plikestatus))
+
 
 def plyy_like(p_id, u_id):
     try:
@@ -116,6 +122,7 @@ def plyy_like(p_id, u_id):
         db.roll()
         return False
 
+
 def plyy_unlike(p_id, u_id):
     try:
         row = db.get_query('SELECT * FROM P_LIKE WHERE u_id = ? AND p_id = ?', (u_id, p_id),mul=False)
@@ -128,25 +135,92 @@ def plyy_unlike(p_id, u_id):
         db.roll()
         return False 
 
-def tag_query(category, id, mul=True):
-    if category.lower() == 'plyy':
-        query = '''
-                SELECT
-                t.name 
-                FROM TAG t 
-                JOIN P_TAG pt ON t.id=pt.id
-                WHERE pt.p_id=?
-                '''
 
-    elif category.lower() == 'curator':
-        query = '''
-                SELECT
-                t.name
-                FROM TAG t
-                JOIN C_TAG ct ON t.id=ct.id
-                WHERE ct.c_id=?
-                '''
+def tag_query(category, id, mul=True):
+    try:
+        if category.lower() == 'plyy':
+            query = '''
+                    SELECT
+                    t.name 
+                    FROM TAG t 
+                    JOIN P_TAG pt ON t.id=pt.id
+                    WHERE pt.p_id=?
+                    '''
+
+        elif category.lower() == 'curator':
+            query = '''
+                    SELECT
+                    t.name
+                    FROM TAG t
+                    JOIN C_TAG ct ON t.id=ct.id
+                    WHERE ct.c_id=?
+                    '''
+            
+        tags = db.get_query(query, (id,), mul)
         
-    tags = get_query(query, (id,), mul)
+        return tags
+    except:
+        print('태그 목록을 불러오는데 실패했습니다.')
+
+
+def plyy_query(condition=None, param=None):
+    try:
+        query1 = '''
+                SELECT
+                p.id,
+                p.title,
+                p.img,
+                STRFTIME('%Y-%m-%d', p.gen_date) AS 'generate',
+                STRFTIME('%Y-%m-%d', p.up_date) AS 'update',
+                c.name AS curator,
+                g.name AS genre,
+                COUNT(s.num) AS tracks,
+                SUM(t.rtime) AS times
+                FROM PLYY p
+                JOIN CURATOR c ON p.c_id=c.id
+                JOIN GENRE g ON p.g_id=g.id
+                JOIN SONG s ON p.id=s.p_id
+                JOIN TRACK t ON s.tk_id=t.id
+                '''
+        query2 = ' GROUP BY p.id;'
+        
+        if condition:
+            if condition == 'cid':
+                add_query = 'WHERE c.id=?'
+            elif condition == 'plyy':
+                add_query = "WHERE p.title LIKE '%'||'%';"
+            elif condition == 'curator':
+                add_query = "WHERE c.name LIKE '%'||'%';"
+            query = query1 + add_query + query2
+            plyys = db.get_query(query, (param,))
+
+
+        if not condition:
+            query = query1 + query2
+            plyys = db.get_query(query)
+
+        result = [dict(row) for row in plyys]
+
+
+        for i in result:
+            tag = tag_query('plyy', i['id'], mul=False)
+            if tag:
+                tag = dict(tag)
+                i['tag'] = tag['name']
+            else:
+                i['tag'] = ''
+
+        pidlist = [i['id'] for i in result]
+
+        if 'id' in session and session['id']:
+            u_id = extract_user(session['id'])
+            if u_id:
+                p_isliked = plyylike_status(pidlist, u_id)
+                print(p_isliked)
+                for i in result:
+                    i['pliked'] = p_isliked.get(i['id'], False)
+
+        return result
+    except:
+        print('플레이리스트 목록을 불러오는데 실패했습니다.')
     
-    return tags

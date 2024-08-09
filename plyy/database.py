@@ -36,29 +36,6 @@ def execute_query(query, params):
     conn.close
 
 
-def tag_query(category, id, mul=True):
-    if category.lower() == 'plyy':
-        query = '''
-                SELECT
-                t.name 
-                FROM TAG t 
-                JOIN P_TAG pt ON t.id=pt.id
-                WHERE pt.p_id=?
-                '''
-
-    elif category.lower() == 'curator':
-        query = '''
-                SELECT
-                t.name
-                FROM TAG t
-                JOIN C_TAG ct ON t.id=ct.id
-                WHERE ct.c_id=?
-                '''
-        
-    tags = get_query(query, (id,), mul)
-    
-    return tags
-
 def roll():
     conn,cur = connect_db()
     conn.rollback()

@@ -3,11 +3,9 @@ function fetchPlyy(api_route) {
     fetch(api_route)
     .then(response =>  response.json())
     .then(data => {
-        document.title = 'PLYY';
         data.forEach((plyy, index) => {
             let dateTagId = 'dateTag' + index;
             let plyyTagId = 'plyyTag' + index;
-            let heartId = 'heart' + index; 
             const plyyCard = document.createElement('li');
             plyyCard.innerHTML = 
                 `<a href="./plyy/${plyy.id}">` +

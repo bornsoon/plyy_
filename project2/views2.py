@@ -8,6 +8,7 @@ plyy = Blueprint('plyy', __name__)
 api_main = Blueprint('api_main', __name__)
 api_plyy = Blueprint('api_plyy', __name__)
 api_c_plyy = Blueprint('api_c_plyy', __name__)
+api_search = Blueprint('api_search', __name__)
 
 
 @main.route('/')
@@ -51,6 +52,18 @@ def api_main_plyy():
 @api_c_plyy.route('/<id>')
 def api_curator_plyy(id):
     result = plyy_query('cid', id)
+    return jsonify(result)
+
+
+@api_search.route('/plyy')
+def search_plyy(words):
+    result = plyy_query('plyy', words)
+    return jsonify(result)
+
+
+@api_search.route('/curator')
+def search_curator(words):
+    result = plyy_query('curator', words)
     return jsonify(result)
 
 

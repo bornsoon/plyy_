@@ -29,7 +29,7 @@
 
 
 {% block script %}
-    <script>   
+    <script>    
         // 추천 태그
         function fetchTag() {
             fetch('/api/main/tag')
@@ -50,6 +50,7 @@
             clearList();
             fetchPlyy('/api/main/plyy');
             tab_status = 'plyy';
+            formBox.action = '/search/plyy';
             mainTab.classList.remove('tab-type2');
             mainTab.classList.add('tab-type1');
             plyyTab.classList.remove('tab-type1--deactive');
@@ -61,7 +62,8 @@
             document.title = 'PLYY | CURATOR';
             clearList();
             fetchCurator('/api/main/curator');
-            tab_status = 'curator'
+            tab_status = 'curator';
+            formBox.action = '/search/curator';
             mainTab.classList.remove('tab-type1');
             mainTab.classList.add('tab-type2');
             curatorTab.classList.remove('tab-type1--deactive');
@@ -73,6 +75,7 @@
             document.title = 'PLYY';
             fetchTag();
             fetchPlyy('/api/main/plyy');
+            formBox.action = '/search/plyy';
         });
     </script>
 {% endblock %}

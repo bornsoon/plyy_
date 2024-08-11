@@ -187,7 +187,7 @@ def plyy_query(condition=None, param=None):
         if condition:
             if condition == 'cid':
                 add_query = 'WHERE c.id=?'
-            elif condition == 'plyy':
+            elif condition == 'title':
                 add_query = "WHERE p.title LIKE '%'||LOWER(?)||'%'"
             elif condition == 'curator':
                 add_query = "WHERE c.name LIKE '%'||LOWER(?)||'%'"
@@ -223,3 +223,54 @@ def plyy_query(condition=None, param=None):
     except:
         print('플레이리스트 목록을 불러오는데 실패했습니다.')
     
+
+def curator_query(condition=None, param=None):
+    try:
+        query = '''
+                SELECT
+                id,
+                name,
+                img,
+                intro
+                FROM CURATOR
+                '''
+
+        if condition=='name':
+            query = query + " WHERE name LIKE '%'||LOWER(?)||'%'"
+            curators = db.get_query(query,(param,))
+        else:
+            curators = db.get_query(query)
+
+        result = [dict(row) for row in curators]
+        
+        for i in result:
+            tags = tag_query('curator', i['id'])
+            tag = []
+            for j in tags[:2]:
+                tag.append(j['name'])
+            i['tag'] = tag
+
+        date_query = '''
+                    SELECT
+                    MAX(STRFTIME('%Y-%m-%d', p.gen_date)) AS generate,
+                    MAX(STRFTIME('%Y-%m-%d', p.up_date)) AS 'update'
+                    FROM PLYY p
+                    JOIN CURATOR c ON p.c_id=c.id
+                    GROUP BY c.id
+                    HAVING c.id=?;
+                    '''
+        for i in result:
+            date = db.get_query(date_query, (i['id'],), mul=False)
+            i.update(dict(date))
+        
+        cidlist = [i['id'] for i in result]
+
+        if 'id' in session and session['id']:
+            u_id = extract_user(session['id'])
+            if u_id:
+                c_isliked = curatorlike_status(cidlist, u_id)
+                for i in result:
+                    i['cliked'] = c_isliked.get(i['id'], False)
+        return result
+    except:
+        print('플레이리스트 목록을 불러오는데 실패했습니다.')

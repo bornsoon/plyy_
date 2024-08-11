@@ -1,0 +1,14 @@
+{% extends "base_search.html" %}
+
+{% block script1 %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchCurator(`/api/search/curator?q=${encodeURIComponent(name)}`);
+            document.title = 'PLYY | Search CURATOR';
+            mainTab.classList.remove('tab-type1');
+            mainTab.classList.add('tab-type2');
+            curatorTab.classList.remove('tab-type1--deactive');
+            plyyTab.classList.add('tab-type1--deactive');
+        });
+    </script>
+{% endblock %}

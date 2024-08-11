@@ -1,6 +1,6 @@
 import database as db
-from flask import Blueprint, jsonify, render_template, session, redirect, request, url_for
-from models import curatorlike_status, plyylike_status, tag_query, plyy_query
+from flask import Blueprint, jsonify, render_template, session, request
+from models import curatorlike_status, tag_query, plyy_query, curator_query
 from utils import extract_user
 
 main = Blueprint('main', __name__)
@@ -69,63 +69,21 @@ def api_curator_plyy(id):
 @api_search.route('/plyy')
 def search_plyy():
     name = request.args.get('q')
-    result = plyy_query('plyy', name.lower())
+    result = plyy_query('title', name.lower())
     return jsonify(result)
 
 
 @api_search.route('/curator')
 def search_curator():
     name = request.args.get('q')
-    result = plyy_query('curator', name.lower())
+    print(name)
+    result = curator_query('name', name.lower())
     return jsonify(result)
 
 
 @api_main.route('/curator')
 def api_main_curator():
-    try:
-        query = '''
-                SELECT
-                id,
-                name,
-                img,
-                intro
-                FROM CURATOR
-                GROUP BY id;
-                '''
-        curators = db.get_query(query)
-        result = [dict(row) for row in curators]
-        
-        for i in result:
-            tags = tag_query('curator', i['id'])
-            tag = []
-            for j in tags[:2]:
-                tag.append(j['name'])
-            i['tag'] = tag
-
-        date_query = '''
-                    SELECT
-                    MAX(STRFTIME('%Y-%m-%d', p.gen_date)) AS generate,
-                    MAX(STRFTIME('%Y-%m-%d', p.up_date)) AS 'update'
-                    FROM PLYY p
-                    JOIN CURATOR c ON p.c_id=c.id
-                    GROUP BY c.id
-                    HAVING c.id=?;
-                    '''
-        for i in result:
-            date = db.get_query(date_query, (i['id'],), mul=False)
-            i.update(dict(date))
-        
-        cidlist = [i['id'] for i in result]
-
-        if 'id' in session and session['id']:
-            u_id = extract_user(session['id'])
-            if u_id:
-                c_isliked = curatorlike_status(cidlist, u_id)
-                for i in result:
-                    i['cliked'] = c_isliked.get(i['id'], False)
-    except:
-        print('큐레이터 목록을 불러오는데 실패했습니다.')
-
+    result = curator_query()
     return jsonify(result)
 
 

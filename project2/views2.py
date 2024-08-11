@@ -1,15 +1,16 @@
 import database as db
-from flask import Blueprint, jsonify, render_template, session, request
-from models import curatorlike_status, tag_query, plyy_query, curator_query
-from utils import extract_user
+from flask import Blueprint, jsonify, render_template, request
+from models import tag_query, plyy_query, curator_query
 
 main = Blueprint('main', __name__)
 plyy = Blueprint('plyy', __name__)
 search = Blueprint('search', __name__)
+likes = Blueprint('like', __name__)
 api_main = Blueprint('api_main', __name__)
 api_plyy = Blueprint('api_plyy', __name__)
 api_c_plyy = Blueprint('api_c_plyy', __name__)
 api_search = Blueprint('api_search', __name__)
+api_like = Blueprint('api_like', __name__)
 
 
 @main.route('/')
@@ -35,6 +36,11 @@ def search_plyy():
 @search.route('/curator')
 def search_curator():
     return render_template('search_curator.html')
+
+
+@likes.route('/<id>')
+def like(id):
+    return render_template('like.html')
 
 
 @api_main.route('/tag')
@@ -76,10 +82,21 @@ def search_plyy():
 @api_search.route('/curator')
 def search_curator():
     name = request.args.get('q')
-    print(name)
     result = curator_query('name', name.lower())
     return jsonify(result)
 
+
+@api_like.route('/plyy/<id>')
+def like_plyy(id):
+    result = plyy_query('uid', id)
+    return jsonify(result)
+    
+
+@api_like.route('/curator/<id>')
+def like_curator(id):
+    result = curator_query('uid', id)
+    return jsonify(result)
+    
 
 @api_main.route('/curator')
 def api_main_curator():

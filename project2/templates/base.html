@@ -16,7 +16,7 @@
             <div class="header__icon-group">
                 <button class="btn-bell--default" aria-label="알림 없음"></button>
                 <!-- <button class="btn-bell--new" aria-label="새로운 알림 있음"></button> -->
-                <button class="btn-mylikes" aria-label="나의 좋아요"></button>
+                <button id="like" class="btn-mylikes" aria-label="나의 좋아요"></button>
                 <button id="profile" class="btn-myprofile" aria-label="내 프로필"></button>
             </div>
         </div>
@@ -62,6 +62,14 @@
         if (! loggedIn) {
             document.getElementById('profile').onclick = function() {
                 window.location.href = '/login' //로그인 페이지로 이동
+            }
+            document.getElementById('like').onclick = function() {
+                window.location.href = '/login' //로그인 페이지로 이동
+            }
+        } else {
+            let id = 1;
+            document.getElementById('like').onclick = function() {
+                window.location.href = `/like/${id}`
             }
         }
 

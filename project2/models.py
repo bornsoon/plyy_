@@ -189,8 +189,8 @@ def plyy_query(condition=None, param=None):
                 add_query = 'WHERE c.id=?'
             elif condition == 'title':
                 add_query = "WHERE p.title LIKE '%'||LOWER(?)||'%'"
-            elif condition == 'curator':
-                add_query = "WHERE c.name LIKE '%'||LOWER(?)||'%'"
+            elif condition == 'uid':
+                add_query = "JOIN P_LIKE pl ON pl.p_id=p.id WHERE pl.u_id=?"
             query = query1 + add_query + query2
             plyys = db.get_query(query, (param,))
 
@@ -232,11 +232,15 @@ def curator_query(condition=None, param=None):
                 name,
                 img,
                 intro
-                FROM CURATOR
+                FROM CURATOR c
                 '''
 
         if condition=='name':
-            query = query + " WHERE name LIKE '%'||LOWER(?)||'%'"
+            query = query + " WHERE name LIKE '%'||LOWER(?)||'%';"
+            curators = db.get_query(query,(param,))
+        elif condition=='uid':
+            query = query + " JOIN C_LIKE cl ON c.id=cl.c_id WHERE cl.u_id=?;"
+            print(param * 10)
             curators = db.get_query(query,(param,))
         else:
             curators = db.get_query(query)

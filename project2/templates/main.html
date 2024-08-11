@@ -1,24 +1,23 @@
 {% extends "base_search.html" %}
 
-<!-- div class="main__container" -->
+<!-- <div class="main__container"> -->
     <!-- 추천 태그 -->
     {% block tag %}
-        <nav class="vertical-scroll">
-            <ul class="search-tags" id="tag"></ul>
-        </nav>
+    <nav class="vertical-scroll">
+        <ul class="search-tags" id="tag"></ul>
+    </nav>
     {% endblock %}
 
     <!-- 메인 탭 -->
     {% block tab %}
-        <nav>
-            <ul class="tab-type1" id="tab-type">
-                <li id="plyy_tab"><button class="h2" id="plyy_tab">PLYY</button></li>
-                <li class="tab-type1--deactive" id="curator_tab"><button class="h2">CURATOR</button></li>
-            </ul>
-        </nav>
+    <nav>
+        <ul class="tab-type1" id="tab-type">
+            <li id="plyy_tab"><button class="h2" id="plyy_tab">PLYY</button></li>
+            <li class="tab-type1--deactive" id="curator_tab"><button class="h2">CURATOR</button></li>
+        </ul>
+    </nav>
     {% endblock %}
-<!-- /div -->
-    
+
     <!-- 플리 & 큐레이터 카드 -->
     {% block content %}      
         <ul class="plyy-card mg32" id="mainList"></ul>
@@ -26,25 +25,11 @@
         <!-- 메인화면 화살표 플로팅 아이콘 -->
         <div class="fixed-floating"><button class="btn__main__arrow" aria-label="메인에서 위로가기"></button></div>
     {% endblock %}
+<!-- /div -->
+
 
 {% block script %}
-    <script src="/static/js/plike.js"></script>
-    <script src="/static/js/clike.js"></script>
-    <script src="/static/js/runtime.js"></script>
-    <script src="/static/js/tag.js"></script>
-    <script src="/static/js/fetchPlyy.js"></script>
-    <script src="/static/js/fetchCurator.js"></script>
     <script>   
-        let tab_status = 'plyy';  // 카드탭 현재상태
-        let playlistLikeStates = {}; // 플레이리스트 좋아요 상태
-        let curatorLikeStates = {}; // 큐레이터 좋아요 상태
-        const mainList = document.getElementById('mainList');
-
-        document.addEventListener('DOMContentLoaded', function() {
-            fetchTag();
-            fetchPlyy('/api/main/plyy');
-        });
-
         // 추천 태그
         function fetchTag() {
             fetch('/api/main/tag')
@@ -59,16 +44,6 @@
             }).catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
         };
 
-
-        function clearList(){
-            while(mainList.firstChild)
-                mainList.removeChild(mainList.firstChild);
-        };
-
-
-        plyyTab = document.getElementById('plyy_tab');
-        curatorTab = document.getElementById('curator_tab');
-        mainTab = document.getElementById('tab-type')
 
         plyyTab.addEventListener('click', function(event){
             document.title = 'PLYY';
@@ -86,12 +61,18 @@
             document.title = 'PLYY | CURATOR';
             clearList();
             fetchCurator('/api/main/curator');
-            tab_status = 'curator';
+            tab_status = 'curator'
             mainTab.classList.remove('tab-type1');
             mainTab.classList.add('tab-type2');
             curatorTab.classList.remove('tab-type1--deactive');
             plyyTab.classList.add('tab-type1--deactive');
         });
 
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.title = 'PLYY';
+            fetchTag();
+            fetchPlyy('/api/main/plyy');
+        });
     </script>
 {% endblock %}

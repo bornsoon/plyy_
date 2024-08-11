@@ -30,9 +30,6 @@
         <div class="main__container">
         {% block container %}
         
-        <!-- 검색창 -->
-        {% block search %}{% endblock %}
-        
         <!-- 내용 -->
         {% block content %}{% endblock %}
 
@@ -48,6 +45,9 @@
         </div>
     </footer>
     {% endblock %}
+    
+    <!-- 검색 스크립트 -->
+    {% block search_script %}{% endblock %}
     
     <!-- 스크립트 -->
     {% block script %}{% endblock %}

@@ -8,7 +8,7 @@ function fetchPlyy(api_route) {
             let plyyTagId = 'plyyTag' + index;
             const plyyCard = document.createElement('li');
             plyyCard.innerHTML = 
-                `<a href="./plyy/${plyy.id}">` +
+                `<a href="/plyy/${plyy.id}">` +
                     '<div class="plyy-card__top">' +
                         `<img src="/static/cardimage/${plyy.img}" alt="" class="plyy-card__top__img">` +
                         `<div id="${dateTagId}" class="badge green"></div>` + 

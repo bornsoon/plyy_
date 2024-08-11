@@ -1,10 +1,11 @@
 import database as db
-from flask import Blueprint, jsonify, render_template, session
+from flask import Blueprint, jsonify, render_template, session, redirect, request, url_for
 from models import curatorlike_status, plyylike_status, tag_query, plyy_query
 from utils import extract_user
 
 main = Blueprint('main', __name__)
 plyy = Blueprint('plyy', __name__)
+search = Blueprint('search', __name__)
 api_main = Blueprint('api_main', __name__)
 api_plyy = Blueprint('api_plyy', __name__)
 api_c_plyy = Blueprint('api_c_plyy', __name__)
@@ -24,6 +25,16 @@ def plyy_detail(id):
 @plyy.route('/<id>/<song_index>')
 def song_detail(id, song_index):
     return render_template('song.html')
+
+
+@search.route('/plyy')
+def search_plyy():
+    return render_template('search_plyy.html')
+
+
+@search.route('/curator')
+def search_curator():
+    return render_template('search_curator.html')
 
 
 @api_main.route('/tag')
@@ -56,14 +67,16 @@ def api_curator_plyy(id):
 
 
 @api_search.route('/plyy')
-def search_plyy(words):
-    result = plyy_query('plyy', words)
+def search_plyy():
+    name = request.args.get('q')
+    result = plyy_query('plyy', name.lower())
     return jsonify(result)
 
 
 @api_search.route('/curator')
-def search_curator(words):
-    result = plyy_query('curator', words)
+def search_curator():
+    name = request.args.get('q')
+    result = plyy_query('curator', name.lower())
     return jsonify(result)
 
 

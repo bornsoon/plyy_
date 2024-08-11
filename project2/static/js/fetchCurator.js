@@ -9,7 +9,7 @@ function fetchCurator(api_route) {
             let curatorTagId2 = 'curatorTag2' + index;
             const curatorCard = document.createElement('li');
             curatorCard.innerHTML =
-                `<a href="./curator/${c.id}">` +
+                `<a href="/curator/${c.id}">` +
                     '<div class="curator-card__top">' +
                         `<img src="/static/cardimage/${c.img}" alt="" class="curator-card__top__img">` +
                         `<div id="${updateTagId}" class="badge green"><span class="hide">UPDATE</span>UPDATE</div>` +

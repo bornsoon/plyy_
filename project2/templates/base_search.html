@@ -4,20 +4,77 @@
     {% block search %}
         <!-- 메인 검색창 : 디폴트 -->
         <form class="search-type1 align both">
-            <input type="text" class="fs14" placeholder="플레이리스트 또는 큐레이터 검색">
+            <input type="text" class="fs14" id="search-input" name="q" placeholder="플레이리스트 또는 큐레이터 검색">
             <div class="align both">
                 <button class="btn-hash" aria-label="해시태그 검색"></button>
-                <button class="btn-search" aria-label="검색"></button>
+                <button class="btn-search" aria-label="검색" onclick="searchByName(this.form);"></button>
             </div>
         </form>
 
-        <!-- 태그바 -->
+        <!-- 추천 태그 -->
         {% block tag %}{% endblock %}
 
-        <!-- 토글바 -->
-        {% block tab %}{% endblock %}
+        <!-- 메인 탭 -->
+        {% block tab %}
+    <!-- 메인 검색결과 탭 -->
+    <div>
+        <div class="tab-type3 align left" onclick="location.href='/'">
+            <div><button class="btn__arrow-left--white"></button></div>
+            <div><button class="h2">In plyy,</button></div>
+        </div>
+    </div>
+
+    <nav>
+        <ul class="tab-type1" id="tab-type">
+            <li id="plyy_tab"><button class="h2" id="plyy_tab">PLYY</button></li>
+            <li class="tab-type1--deactive" id="curator_tab"><button class="h2">CURATOR</button></li>
+        </ul>
+    </nav>
+    {% endblock %}
         
     {% endblock %}
     
-    {% block content %}{% endblock %}
+    <!-- 플리 & 큐레이터 카드 -->
+    {% block content %}      
+        <ul class="plyy-card mg32" id="mainList"></ul>
+
+        <!-- 메인화면 화살표 플로팅 아이콘 -->
+        <div class="fixed-floating"><button class="btn__main__arrow" aria-label="메인에서 위로가기"></button></div>
+    {% endblock %}
+    
+{% endblock %}
+
+{% block search_script %}
+    <script src="/static/js/plike.js"></script>
+    <script src="/static/js/clike.js"></script>
+    <script src="/static/js/runtime.js"></script>
+    <script src="/static/js/tag.js"></script>
+    <script src="/static/js/fetchPlyy.js"></script>
+    <script src="/static/js/fetchCurator.js"></script>
+    <script>
+        let playlistLikeStates = {}; // 플레이리스트 좋아요 상태
+        let curatorLikeStates = {}; // 큐레이터 좋아요 상태
+        let tab_status = 'plyy';
+        const mainList = document.getElementById('mainList');
+        const plyyTab = document.getElementById('plyy_tab');
+        const curatorTab = document.getElementById('curator_tab');
+        const mainTab = document.getElementById('tab-type');
+
+        
+        function clearList(){
+            while(mainList.firstChild)
+                mainList.removeChild(mainList.firstChild);
+        };
+
+
+        function searchByName(form) {
+            if (tab_status == 'curator') {
+                form.action = '/search/curator'; 
+            } else {
+                form.action = '/search/plyy';
+            };
+            form.method = 'GET';
+            form.submit();
+        };
+    </script>
 {% endblock %}

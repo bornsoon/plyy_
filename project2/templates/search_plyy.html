@@ -1,0 +1,36 @@
+{% extends "base_search.html" %}
+
+{% block script %}
+
+    <script>
+        let url = new URLSearchParams(window.location.search);
+        const name = url.get('q');
+        
+
+        plyyTab.addEventListener('click', function(event){
+            document.title = 'PLYY | Search PLYY';
+            clearList();
+            fetchCurator(`/api/search/plyy?q=${encodeURIComponent(name)}`);
+            mainTab.classList.remove('tab-type2');
+            mainTab.classList.add('tab-type1');
+            plyyTab.classList.remove('tab-type1--deactive');
+            curatorTab.classList.add('tab-type1--deactive');
+        });
+
+        curatorTab.addEventListener('click', function(event){
+            document.title = 'PLYY | Search CURATOR';
+            clearList();
+            fetchCurator(`/api/search/curator?q=${encodeURIComponent(name)}`);
+            mainTab.classList.remove('tab-type1');
+            mainTab.classList.add('tab-type2');
+            curatorTab.classList.remove('tab-type1--deactive');
+            plyyTab.classList.add('tab-type1--deactive');
+        });
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchPlyy(`/api/search/plyy?q=${encodeURIComponent(name)}`);
+            document.title = 'PLYY | Search PLYY';
+        });
+    </script>
+{% endblock %}

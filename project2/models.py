@@ -188,9 +188,9 @@ def plyy_query(condition=None, param=None):
             if condition == 'cid':
                 add_query = 'WHERE c.id=?'
             elif condition == 'plyy':
-                add_query = "WHERE p.title LIKE '%'||'%';"
+                add_query = "WHERE p.title LIKE '%'||LOWER(?)||'%'"
             elif condition == 'curator':
-                add_query = "WHERE c.name LIKE '%'||'%';"
+                add_query = "WHERE c.name LIKE '%'||LOWER(?)||'%'"
             query = query1 + add_query + query2
             plyys = db.get_query(query, (param,))
 
@@ -219,7 +219,6 @@ def plyy_query(condition=None, param=None):
                 print(p_isliked)
                 for i in result:
                     i['pliked'] = p_isliked.get(i['id'], False)
-
         return result
     except:
         print('플레이리스트 목록을 불러오는데 실패했습니다.')

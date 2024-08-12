@@ -1,12 +1,10 @@
 {% extends "base_search.html" %}
 
 {% block script_tag %}
-    <script>
         function searchByTag() {
             searchInput.value = '# ' + tagList[parseInt(Math.random() * tagList.length)];
-            name = searchInput.value; 
+            console.log(searchInput.value)
         };
-    </script>
 {% endblock %}
 
 {% block script1 %}

@@ -84,6 +84,7 @@
             }).catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
         };
 
+
         function clearList(){
             while(mainList.firstChild)
                 mainList.removeChild(mainList.firstChild);
@@ -94,21 +95,20 @@
             form.method = 'GET';
             form.submit();
         };
-    </script>
+    
 
     {% block script_tag %}
-        <script>
-            function searchByTag() {
-                if (searchHash.classList.contains('btn-hash--active')) {
-                    searchHash.classList.remove('btn-hash--active');
-                    searchInput.value = '';
-                } else {
-                    searchHash.classList.add('btn-hash--active');
-                    searchInput.value = '# ' + tagList[parseInt(Math.random() * tagList.length)];
-                }
-            };
-        </script>
+        function searchByTag() {
+            if (searchHash.classList.contains('btn-hash--active')) {
+                searchHash.classList.remove('btn-hash--active');
+                searchInput.value = '';
+            } else {
+                searchHash.classList.add('btn-hash--active');
+                searchInput.value = '# ' + tagList[parseInt(Math.random() * tagList.length)];
+            }
+        };
     {% endblock %}
+    </script>
 {% endblock %}
 
 

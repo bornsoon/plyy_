@@ -35,3 +35,8 @@ JOIN CURATOR c ON p.c_id=c.id
 JOIN GENRE g ON p.g_id=g.id
 JOIN SONG s ON p.id=s.p_id
 JOIN TRACK t ON s.tk_id=t.id
+JOIN P_TAG pt ON p.id=pt.p_id
+JOIN TAG tg ON pt.t_id=tg.id
+WHERE tg.name LIKE '%al%'
+OR genre LIKE '%al%'
+GROUP BY p.id

@@ -6,9 +6,12 @@
     <iframe id="video" width=100% height=100% style="border:none"></iframe>
     </div>
     <!-- 곡 인덱스  -->
-    <div class="song__index">
-        <div class="badge tag" id="page"></div>
+    <div class="song__index align both">
+        <div class="index badge tag" id="page"></div>
+        <button class="btn__arrow-left--white" id="before"></button>
+        <button class="btn__arrow-right" id="after"></button>
     </div>
+    <!-- 곡 상세 -->
     <div class="song">
         <div class="song__img"><img id="image"></div>
         <div class="song__info">
@@ -18,7 +21,7 @@
         </div>
     </div>
     <!-- 곡에대한 큐레이터 코멘트 -->
-    <div class="song-cmt" id="song_comment">
+    <div class="song-cmt" id="song_comment" style="display: None;">
         <div class="pretendard"></div>
     </div>
     <div class="fixed-floating">
@@ -32,6 +35,12 @@
 
 {% block script %}
     <script>
+        mainDiv = document.getElementById('main-container');
+        mainDiv.style.backgroundImage = "url('/static/images/song-detail-background.jpg')";
+        mainDiv.style.backgroundImage = "no-repeat";
+        mainDiv.style.backgroundSize = "cover";
+
+
         document.addEventListener('DOMContentLoaded', function() {
             let url = window.location.href;
             url = url.split('/');
@@ -39,6 +48,7 @@
             let song_num = url[url.length - 1] - 1;
             fetchSong(plyyId, song_num);
         });
+
         
         function fetchSong(plyyId, song_num) {
             fetch(`/api/plyy/${plyyId}/${song_num}`)
@@ -52,16 +62,26 @@
                 const artist = document.getElementById('song_artist');
                 const album = document.getElementById('song_album');
                 const song_comment = document.getElementById('song_comment');
-                song_comment.innerHTML = `<div class="pretendard">${track.comment}</div>`
+                const before_page = document.getElementById('before');
+                const after_page = document.getElementById('after');
                 if (!(track.comment)) {
-                    song_comment.style.visibility = "hidden";
+                    song_comment.style.visibility = "visible";
                 }
+                song_comment.innerHTML = `<div class="pretendard">${track.comment}</div>`
                 // video.setAttribute('src', `${track.vid}`);
-                video.setAttribute('src', "https://www.youtube.com/embed/PdUiCJnRptk");
+                // video.setAttribute('src', "https://www.youtube.com/embed/PdUiCJnRptk");
+                video.setAttribute('src', "https://www.youtube.com/embed/ldzmYDDPnz4");
                 image.setAttribute('src', `${track.img}`);
                 page.innerHTML = '<span>' + `${song_num + 1}` + '</span>' +
                                  '<span>&nbsp;/&nbsp;</span>' +
                                  '<span>' + track.total_num + '</span>';
+                before_page.setAttribute('onclick', `location.href='/plyy/${plyyId}/${song_num }'`);
+                after_page.setAttribute('onclick', `location.href='/plyy/${plyyId}/${song_num + 2}'`);
+                if (song_num == 0) {
+                    before_page.style.visibility = 'hidden';
+                } else if (song_num + 1== track.total_num){
+                    after_page.style.visibility = 'hidden';
+                }
                 song_title.textContent = track.title;
                 artist.textContent = track.artist;
                 album.textContent = track.album

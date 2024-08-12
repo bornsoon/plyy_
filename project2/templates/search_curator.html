@@ -2,6 +2,11 @@
 
 {% block script1 %}
     <script>
+        function searchByTag() {
+            searchInput.value = '# ' + tagList[parseInt(Math.random() * tagList.length)];
+            name = searchInput.value; 
+        };
+
         document.addEventListener('DOMContentLoaded', function() {
             fetchCurator(`/api/search/curator?q=${encodeURIComponent(name)}`);
             document.title = 'PLYY | Search CURATOR';

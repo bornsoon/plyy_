@@ -186,14 +186,21 @@ def plyy_query(condition=None, param=None):
         if condition:
             if condition.lower() == 'cid':
                 add_query = 'WHERE c.id=?'
-            if condition.lower() == 'pid':
-                add_query = 'WHERE p.id=?'
-            if condition.lower() == 'cid':
-                add_query = 'WHERE c.id=?'
             elif condition.lower() == 'title':
                 add_query = "WHERE p.title LIKE '%'||?||'%'"
             elif condition.lower() == 'uid':
                 add_query = "JOIN P_LIKE pl ON pl.p_id=p.id WHERE pl.u_id=?"
+            elif condition.lower() == 'tag':
+                add_query1 = '''
+                            JOIN P_TAG pt ON p.id=pt.p_id
+                            WHERE pt.name LIKE '%'||?||'%'
+                            UNION
+                            '''
+                add_query2 = '''
+                            JOIN GENRE g ON p.g_id=g.id
+                            WHERE pt.name LIKE '%'||?||'%'
+                            '''
+                add_query = add_query1 + add_query + add_query2
                 
             query = query1 + add_query + query2
             plyys = db.get_query(query, (param,))
@@ -239,15 +246,15 @@ def curator_query(condition=None, param=None):
                 intro
                 FROM CURATOR c
                 '''
+        curators = db.get_query(query)
 
-        if condition.lower()=='name':
-            query = query + " WHERE name LIKE '%'||LOWER(?)||'%';"
-            curators = db.get_query(query,(param,))
-        elif condition.lower()=='uid':
-            query = query + " JOIN C_LIKE cl ON c.id=cl.c_id WHERE cl.u_id=?;"
-            curators = db.get_query(query,(param,))
-        else:
-            curators = db.get_query(query)
+        if condition:
+            if condition.lower()=='name':
+                query = query + " WHERE name LIKE '%'||?||'%';"
+                curators = db.get_query(query,(param,))
+            elif condition.lower()=='uid':
+                query = query + " JOIN C_LIKE cl ON c.id=cl.c_id WHERE cl.u_id=?;"
+                curators = db.get_query(query,(param,))
 
         result = [dict(row) for row in curators]
         
@@ -281,4 +288,4 @@ def curator_query(condition=None, param=None):
                     i['cliked'] = c_isliked.get(i['id'], False)
         return result
     except:
-        print('플레이리스트 목록을 불러오는데 실패했습니다.')
+        print('큐레이터 목록을 불러오는데 실패했습니다.')

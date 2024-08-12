@@ -1,0 +1,37 @@
+{% extends "base_search.html" %}
+
+{% block script1 %}
+    <script>
+        function searchByTag() {
+            searchInput.value = '# ' + tagList[parseInt(Math.random() * tagList.length)]; 
+        };
+    </script>
+{% endblock %}
+
+            SELECT
+            p.id
+            FROM PLYY p
+            JOIN P_TAG pt ON p.id=pt.p_id
+            WHERE pt.name LIKE '%'||?||'%'
+            UNION
+            SELECT
+            p.id
+            FROM PLYY p
+            JOIN GENRE g ON p.g_id=g.id
+            WHERE pt.name LIKE '%'||?||'%'
+
+SELECT
+p.id,
+p.title,
+p.img,
+STRFTIME('%Y-%m-%d', p.gen_date) AS 'generate',
+STRFTIME('%Y-%m-%d', p.up_date) AS 'update',
+c.name AS curator,
+g.name AS genre,
+COUNT(s.num) AS tracks,
+SUM(t.rtime) AS times
+FROM PLYY p
+JOIN CURATOR c ON p.c_id=c.id
+JOIN GENRE g ON p.g_id=g.id
+JOIN SONG s ON p.id=s.p_id
+JOIN TRACK t ON s.tk_id=t.id

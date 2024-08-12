@@ -29,22 +29,7 @@
 
 
 {% block script %}
-    <script>    
-        // 추천 태그
-        function fetchTag() {
-            fetch('/api/main/tag')
-            .then(response => response.json())
-            .then(data => {
-                const searchByTag = document.getElementById('tag')
-                data.forEach(data => {
-                    const newItem = document.createElement('li');
-                    newItem.innerHTML = '<a class="fs12 badge tag"># ' + data.tag + '</a>';
-                    searchByTag.appendChild(newItem);
-                })
-            }).catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
-        };
-
-
+    <script>
         plyyTab.addEventListener('click', function(event){
             document.title = 'PLYY';
             clearList();

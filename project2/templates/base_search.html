@@ -6,8 +6,8 @@
         <form class="search-type1 align both" name="form-box">
             <input type="text" class="fs14" id="search-input" name="q" placeholder="플레이리스트 또는 큐레이터 검색">
             <div class="align both">
-                <button class="btn-hash" aria-label="해시태그 검색"></button>
-                <button class="btn-search" aria-label="검색" onclick="searchByName(this.form);"></button>
+                <button type="button" class="btn-hash" id="search-hash" onclick="searchByTag();" aria-label="해시태그 검색"></button>
+                <button class="btn-search" onclick="searchByName(this.form);" aria-label="검색"></button>
             </div>
         </form>
 
@@ -54,18 +54,35 @@
     <script>
         let playlistLikeStates = {}; // 플레이리스트 좋아요 상태
         let curatorLikeStates = {}; // 큐레이터 좋아요 상태
-        var tab_status = 'plyy';
+        let tab_status = 'plyy';
+        let tagList = new Array;
         const mainList = document.getElementById('mainList');
         const plyyTab = document.getElementById('plyy_tab');
         const curatorTab = document.getElementById('curator_tab');
         const mainTab = document.getElementById('tab-type');
         const searchInput = document.getElementById('search-input');
+        const searchHash = document.getElementById('search-hash');
+        const tags = document.getElementById('tag');
 
         let url = new URLSearchParams(window.location.search);
         const name = url.get('q');
         const formBox = document.forms['form-box'];
         searchInput.value = name;
 
+
+        // 추천 태그
+        function fetchTag() {
+            fetch('/api/main/tag')
+            .then(response => response.json())
+            .then(data => {  
+                data.forEach(data => {
+                    const newItem = document.createElement('li');
+                    newItem.innerHTML = '<a class="fs12 badge tag"># ' + data.tag + '</a>';
+                    tags.appendChild(newItem);
+                    tagList.push(data.tag);
+                })
+            }).catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
+        };
 
         function clearList(){
             while(mainList.firstChild)
@@ -78,6 +95,20 @@
             form.submit();
         };
     </script>
+
+    {% block script_tag %}
+        <script>
+            function searchByTag() {
+                if (searchHash.classList.contains('btn-hash--active')) {
+                    searchHash.classList.remove('btn-hash--active');
+                    searchInput.value = '';
+                } else {
+                    searchHash.classList.add('btn-hash--active');
+                    searchInput.value = '# ' + tagList[parseInt(Math.random() * tagList.length)];
+                }
+            };
+        </script>
+    {% endblock %}
 {% endblock %}
 
 

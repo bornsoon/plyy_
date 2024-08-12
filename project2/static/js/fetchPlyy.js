@@ -13,7 +13,7 @@ function fetchPlyy(api_route) {
                         `<img src="/static/cardimage/${plyy.img}" alt="" class="plyy-card__top__img">` +
                         `<div id="${dateTagId}" class="badge green"></div>` + 
                         '<div class="plyy-card__top__tag-list">' +
-                            `<div class="badge tag"># ${plyy.genre}</div>` +
+                            `<div id="genreTag" class="badge tag" onclick='location.href="/search/plyy?q=%23+${plyy.genre}"')># ${plyy.genre}</div>` +
                             `<div id="${plyyTagId}" class="badge tag"></div>` +
                         '</div>' +
                         `<button class="btn-plike--${plyy.pliked ? 'fill' : 'unfill'}" id="like-${plyy.id}" aria-label="플레이리스트 좋아요 즐겨찾기"></button>` +
@@ -41,11 +41,19 @@ function fetchPlyy(api_route) {
             
             // 플리태그 2개까지
             let plyy_tag = document.getElementById(plyyTagId);
+            let genre_tag = document.getElementById("genreTag");
             if (plyy.tag) {
                 plyy_tag.textContent = '#' + plyy.tag;
+                plyy_tag.setAttribute('onclick' , `location.href="/search/plyy?q=%23+${plyy.tag}"`);
             } else {
                 plyy_tag.style.visibility = "hidden";
             };
+            genre_tag.addEventListener('click', function(event) {
+                event.preventDefault();
+            })
+            plyy_tag.addEventListener('click', function(event) {
+                event.preventDefault();
+            })
 
 
             // 플레이리스트 좋아요 버튼 클릭 이벤트 처리

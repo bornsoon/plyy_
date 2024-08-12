@@ -151,7 +151,7 @@ def tag_query(category, param, mul=True):
                     SELECT
                     t.name
                     FROM TAG t
-                    JOIN C_TAG ct ON t.id=ct.c_id
+                    JOIN C_TAG ct ON t.id=ct.t_id
                     WHERE ct.c_id=?
                     '''    
 
@@ -186,18 +186,25 @@ def plyy_query(condition=None, param=None):
         if condition:
             if condition.lower() == 'cid':
                 add_query = 'WHERE c.id=?'
+                query = query1 + add_query + query2
+                plyys = db.get_query(query, (param,))    
             elif condition.lower() == 'title':
                 add_query = "WHERE p.title LIKE '%'||?||'%'"
+                query = query1 + add_query + query2
+                plyys = db.get_query(query, (param,))    
             elif condition.lower() == 'uid':
                 add_query = "JOIN P_LIKE pl ON pl.p_id=p.id WHERE pl.u_id=?"
+                query = query1 + add_query + query2
+                plyys = db.get_query(query, (param,))    
             elif condition.lower() == 'tag':
                 add_query = '''
                             JOIN P_TAG pt ON p.id=pt.p_id
                             JOIN TAG tg ON pt.t_id=tg.id
                             WHERE tg.name LIKE '%'||?||'%'
+                            OR genre LIKE '%'||?||'%'
                             '''
-            query = query1 + add_query + query2
-            plyys = db.get_query(query, (param,))      
+                query = query1 + add_query + query2
+                plyys = db.get_query(query, (param, param, ))      
 
         if not condition:
             query = query1 + query2
@@ -232,7 +239,7 @@ def curator_query(condition=None, param=None):
         query = '''
                 SELECT
                 c.id,
-                name,
+                c.name,
                 img,
                 intro
                 FROM CURATOR c
@@ -241,20 +248,16 @@ def curator_query(condition=None, param=None):
 
         if condition:
             if condition.lower() == 'name':
-                query = query + " WHERE name LIKE '%'||?||'%';"
-                curators = db.get_query(query,(param,))
+                query = query + " WHERE c.name LIKE '%'||?||'%';"         
             elif condition.lower() == 'uid':
                 query = query + " JOIN C_LIKE cl ON c.id=cl.c_id WHERE cl.u_id=?;"
-                curators = db.get_query(query,(param,))
             elif condition.lower() == 'tag':
                 query = query + '''
-                                JOIN C_TAG pt ON c.id=pt.c_id 
+                                JOIN C_TAG ct ON c.id=ct.c_id 
                                 JOIN TAG tg ON ct.t_id=tg.id
-                                WHERE tg.name LIKE '%'||?||'%'
-                                OR genre LIKE '%'||?||'%'
+                                WHERE tg.name LIKE '%'||?||'%';
                                 '''
-                curators = db.get_query(query,(param,))
-
+            curators = db.get_query(query,(param,))
         result = [dict(row) for row in curators]
         
         for i in result:

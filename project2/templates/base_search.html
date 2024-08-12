@@ -12,25 +12,29 @@
         </form>
 
         <!-- 추천 태그 -->
-        {% block tag %}{% endblock %}
+        {% block tag %}
+        <nav class="vertical-scroll">
+            <ul class="search-tags" id="tag"></ul>
+        </nav>
+        {% endblock %}
 
         <!-- 메인 탭 -->
         {% block tab %}
-    <!-- 메인 검색결과 탭 -->
-    <div>
-        <div class="tab-type3 align left" onclick="location.href='/'">
-            <div><button class="btn__arrow-left--white"></button></div>
-            <div><button class="h2">In plyy,</button></div>
-        </div>
-    </div>
+            <!-- 메인 검색결과 탭 -->
+            <div>
+                <div class="tab-type3 align left" onclick="location.href='/'">
+                    <div><button class="btn__arrow-left--white"></button></div>
+                    <div><button class="h2">In plyy,</button></div>
+                </div>
+            </div>
 
-    <nav>
-        <ul class="tab-type1" id="tab-type">
-            <li id="plyy_tab"><button class="h2" id="plyy_tab">PLYY</button></li>
-            <li class="tab-type1--deactive" id="curator_tab"><button class="h2">CURATOR</button></li>
-        </ul>
-    </nav>
-    {% endblock %}
+            <nav>
+                <ul class="tab-type1" id="tab-type">
+                    <li id="plyy_tab"><button class="h2" id="plyy_tab">PLYY</button></li>
+                    <li class="tab-type1--deactive" id="curator_tab"><button class="h2">CURATOR</button></li>
+                </ul>
+            </nav>
+        {% endblock %}
         
     {% endblock %}
     
@@ -55,7 +59,7 @@
         let playlistLikeStates = {}; // 플레이리스트 좋아요 상태
         let curatorLikeStates = {}; // 큐레이터 좋아요 상태
         let tab_status = 'plyy';
-        let tagList = new Array;
+        var tagList = new Array;
         const mainList = document.getElementById('mainList');
         const plyyTab = document.getElementById('plyy_tab');
         const curatorTab = document.getElementById('curator_tab');
@@ -65,19 +69,40 @@
         const tags = document.getElementById('tag');
 
         let url = new URLSearchParams(window.location.search);
-        const name = url.get('q');
+        let query = url.get('q');
         const formBox = document.forms['form-box'];
-        searchInput.value = name;
+        searchInput.value = query;
+
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchTag();
+        });
+        
+
+        function clearList(){
+            while(mainList.firstChild)
+            mainList.removeChild(mainList.firstChild);
+        };
+
+        function searchByName(form) {
+            form.method = 'GET';
+            form.submit();
+        };
+    </script>
 
 
+    {% block script_tag %}
+    <script>   
         // 추천 태그
         function fetchTag() {
             fetch('/api/main/tag')
             .then(response => response.json())
-            .then(data => {  
+            .then(data => { 
+                    data.sort(() => Math.random() - 0.5);
                 data.forEach(data => {
                     const newItem = document.createElement('li');
-                    newItem.innerHTML = '<a class="fs12 badge tag"># ' + data.tag + '</a>';
+                    newItem.innerHTML = `<a class="fs12 badge tag" href="/search/plyy?q=%23+${data.tag}"># ` +
+                                        data.tag + '</a>';
                     tags.appendChild(newItem);
                     tagList.push(data.tag);
                 })
@@ -85,19 +110,6 @@
         };
 
 
-        function clearList(){
-            while(mainList.firstChild)
-                mainList.removeChild(mainList.firstChild);
-        };
-
-
-        function searchByName(form) {
-            form.method = 'GET';
-            form.submit();
-        };
-    
-
-    {% block script_tag %}
         function searchByTag() {
             if (searchHash.classList.contains('btn-hash--active')) {
                 searchHash.classList.remove('btn-hash--active');
@@ -107,8 +119,8 @@
                 searchInput.value = '# ' + tagList[parseInt(Math.random() * tagList.length)];
             }
         };
-    {% endblock %}
     </script>
+    {% endblock %}
 {% endblock %}
 
 
@@ -116,29 +128,29 @@
     {% block script1 %}{% endblock %} 
     <script>
         plyyTab.addEventListener('click', function(event){
+            searchInput.value = query;
             document.title = 'PLYY | Search PLYY';
             clearList();
-            fetchCurator(`/api/search/plyy?q=${encodeURIComponent(name)}`);
+            fetchCurator(`/api/search/plyy?q=${encodeURIComponent(query)}`);
             formBox.action = '/search/plyy';
+            formBox.submit();
             mainTab.classList.remove('tab-type2');
             mainTab.classList.add('tab-type1');
             plyyTab.classList.remove('tab-type1--deactive');
             curatorTab.classList.add('tab-type1--deactive');
-
-            window.location.href=`/search/plyy?q=${name}`;
         });
 
         curatorTab.addEventListener('click', function(event){
+            searchInput.value = query;
             document.title = 'PLYY | Search CURATOR';
             clearList();
-            fetchCurator(`/api/search/curator?q=${encodeURIComponent(name)}`);
+            fetchCurator(`/api/search/curator?q=${encodeURIComponent(query)}`);
             formBox.action = '/search/curator';
+            formBox.submit();
             mainTab.classList.remove('tab-type1');
             mainTab.classList.add('tab-type2');
             curatorTab.classList.remove('tab-type1--deactive');
             plyyTab.classList.add('tab-type1--deactive');
-
-            window.location.href=`/search/curator?q=${name}`;
         });
     </script>   
 {% endblock %}

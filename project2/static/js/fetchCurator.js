@@ -50,8 +50,13 @@ function fetchCurator(api_route) {
                     tag[index].style.visibility = "hidden";
                 } else {
                     tag[index].textContent = '#' + element;
-                }
+                    tag[index].setAttribute('onclick' , `location.href="/search/curator?q=%23+${element}"`);
+                };
+                tag[index].addEventListener('click', function(event) {
+                    event.preventDefault();
+                })
             });
+            
 
 
             // 큐레이터 좋아요 버튼 클릭 이벤트 처리

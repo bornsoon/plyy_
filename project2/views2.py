@@ -75,14 +75,28 @@ def api_curator_plyy(id):
 @api_search.route('/plyy')
 def search_plyy():
     name = request.args.get('q')
-    result = plyy_query('title', name.lower())
+    result = plyy_query('title', name)
     return jsonify(result)
 
 
 @api_search.route('/curator')
 def search_curator():
     name = request.args.get('q')
-    result = curator_query('name', name.lower())
+    result = curator_query('name', name)
+    return jsonify(result)
+
+
+@api_search.route('/tag/plyy')
+def search_tag():
+    tag = request.args.get('q')
+    query = '''
+            SELECT
+            p.id
+            FROM PLYY p
+            JOIN P_TAG pt ON p.id=pt.p_id
+            WHERE LOWER(pt.name)=?
+            '''
+    result = plyy_query('pid', tag.lower())
     return jsonify(result)
 
 

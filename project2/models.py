@@ -136,7 +136,7 @@ def plyy_unlike(p_id, u_id):
         return False 
 
 
-def tag_query(category, id, mul=True):
+def tag_query(category, param, mul=True):
     try:
         if category.lower() == 'plyy':
             query = '''
@@ -145,8 +145,7 @@ def tag_query(category, id, mul=True):
                     FROM TAG t 
                     JOIN P_TAG pt ON t.id=pt.id
                     WHERE pt.p_id=?
-                    '''
-
+                    '''        
         elif category.lower() == 'curator':
             query = '''
                     SELECT
@@ -154,9 +153,9 @@ def tag_query(category, id, mul=True):
                     FROM TAG t
                     JOIN C_TAG ct ON t.id=ct.id
                     WHERE ct.c_id=?
-                    '''
-            
-        tags = db.get_query(query, (id,), mul)
+                    '''    
+
+        tags = db.get_query(query, (param,), mul)
         
         return tags
     except:
@@ -185,12 +184,17 @@ def plyy_query(condition=None, param=None):
         query2 = ' GROUP BY p.id;'
         
         if condition:
-            if condition == 'cid':
+            if condition.lower() == 'cid':
                 add_query = 'WHERE c.id=?'
-            elif condition == 'title':
-                add_query = "WHERE p.title LIKE '%'||LOWER(?)||'%'"
-            elif condition == 'uid':
+            if condition.lower() == 'pid':
+                add_query = 'WHERE p.id=?'
+            if condition.lower() == 'cid':
+                add_query = 'WHERE c.id=?'
+            elif condition.lower() == 'title':
+                add_query = "WHERE p.title LIKE '%'||?||'%'"
+            elif condition.lower() == 'uid':
                 add_query = "JOIN P_LIKE pl ON pl.p_id=p.id WHERE pl.u_id=?"
+                
             query = query1 + add_query + query2
             plyys = db.get_query(query, (param,))
 
@@ -210,7 +214,8 @@ def plyy_query(condition=None, param=None):
             else:
                 i['tag'] = ''
 
-        pidlist = [i['id'] for i in result]
+        pidlist = [i['id'] for i in result]                
+
 
         if 'id' in session and session['id']:
             u_id = extract_user(session['id'])
@@ -228,19 +233,18 @@ def curator_query(condition=None, param=None):
     try:
         query = '''
                 SELECT
-                id,
+                c.id,
                 name,
                 img,
                 intro
                 FROM CURATOR c
                 '''
 
-        if condition=='name':
+        if condition.lower()=='name':
             query = query + " WHERE name LIKE '%'||LOWER(?)||'%';"
             curators = db.get_query(query,(param,))
-        elif condition=='uid':
+        elif condition.lower()=='uid':
             query = query + " JOIN C_LIKE cl ON c.id=cl.c_id WHERE cl.u_id=?;"
-            print(param * 10)
             curators = db.get_query(query,(param,))
         else:
             curators = db.get_query(query)

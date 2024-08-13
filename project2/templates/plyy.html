@@ -72,11 +72,15 @@
                 const genre = document.createElement('li');
                 genre.textContent = '# ' + data.plyy.genre;
                 genre.classList.add('badge', 'tag', 'fs12');
+                genre.setAttribute('onclick', `location.href="/search/plyy?q=%23+${data.plyy.genre}"`);
+                genre.style.cursor= 'pointer';
                 tagContainer.appendChild(genre);
                 data.tags.forEach(data => {
                     const tag = document.createElement('li');
                     tag.textContent = '# ' + data.name;
                     tag.classList.add('badge', 'tag', 'fs12');
+                    tag.setAttribute('onclick', `location.href="/search/plyy?q=%23+${data.name}"`);
+                    tag.style.cursor= 'pointer';
                     tagContainer.appendChild(tag);
                 });
                 const lst = document.getElementById('tracks')

@@ -6,6 +6,7 @@ main = Blueprint('main', __name__)
 plyy = Blueprint('plyy', __name__)
 search = Blueprint('search', __name__)
 likes = Blueprint('like', __name__)
+notification = Blueprint('notification', __name__)
 api_main = Blueprint('api_main', __name__)
 api_plyy = Blueprint('api_plyy', __name__)
 api_c_plyy = Blueprint('api_c_plyy', __name__)
@@ -41,6 +42,11 @@ def search_curator():
 @likes.route('/<id>')
 def like(id):
     return render_template('like.html')
+
+
+@notification.route('/<id>')
+def notify(id):
+    return render_template('notification.html')
 
 
 @api_main.route('/tag')

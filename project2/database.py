@@ -2,7 +2,7 @@ import sqlite3
 import os
 
 def connect_db():
-    database_path = os.path.join(os.path.dirname(__file__), 'plyy_v4.db')
+    database_path = os.path.join(os.path.dirname(__file__), 'plyy_v5.db')
     conn = sqlite3.connect(database_path)
     conn.execute('PRAGMA foreign_keys = ON')
     conn.row_factory = sqlite3.Row

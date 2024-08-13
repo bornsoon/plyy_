@@ -21,7 +21,7 @@
         </div>
     </div>
     <!-- 곡에대한 큐레이터 코멘트 -->
-    <div class="song-cmt" id="song_comment" style="display: None;">
+    <div class="song-cmt" id="song_comment" style="visibility: hidden;">
         <div class="pretendard"></div>
     </div>
     <div class="fixed-floating">
@@ -64,13 +64,11 @@
                 const song_comment = document.getElementById('song_comment');
                 const before_page = document.getElementById('before');
                 const after_page = document.getElementById('after');
-                if (!(track.comment)) {
+                if (track.comment) {
                     song_comment.style.visibility = "visible";
                 }
                 song_comment.innerHTML = `<div class="pretendard">${track.comment}</div>`
-                // video.setAttribute('src', `${track.vid}`);
-                // video.setAttribute('src', "https://www.youtube.com/embed/PdUiCJnRptk");
-                video.setAttribute('src', "https://www.youtube.com/embed/ldzmYDDPnz4");
+                video.setAttribute('src', `${track.vid}`);
                 image.setAttribute('src', `${track.img}`);
                 page.innerHTML = '<span>' + `${song_num + 1}` + '</span>' +
                                  '<span>&nbsp;/&nbsp;</span>' +

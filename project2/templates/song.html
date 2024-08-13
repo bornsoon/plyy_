@@ -44,7 +44,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             let url = window.location.href;
             url = url.split('/');
-            let plyyId = url[url.length - 2];
+            let plyyId = url[url.length - 2]; 
             let song_num = url[url.length - 1] - 1;
             fetchSong(plyyId, song_num);
         });
@@ -73,7 +73,7 @@
                 page.innerHTML = '<span>' + `${song_num + 1}` + '</span>' +
                                  '<span>&nbsp;/&nbsp;</span>' +
                                  '<span>' + track.total_num + '</span>';
-                before_page.setAttribute('onclick', `location.href='/plyy/${plyyId}/${song_num }'`);
+                before_page.setAttribute('onclick', `location.href='/plyy/${plyyId}/${song_num}'`);
                 after_page.setAttribute('onclick', `location.href='/plyy/${plyyId}/${song_num + 2}'`);
                 if (song_num == 0) {
                     before_page.style.visibility = 'hidden';
@@ -82,7 +82,7 @@
                 }
                 song_title.textContent = track.title;
                 artist.textContent = track.artist;
-                album.textContent = track.album
+                album.textContent = track.album;
             })
             .catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
         };

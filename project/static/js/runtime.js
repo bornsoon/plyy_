@@ -10,7 +10,7 @@ function plyy_time(time) {
     hour = parseInt(time / 60)
     minute = time % 60
     if (hour) {
-        hour = hour + '시간'
+        hour = hour + '시간 '
     } else {
         hour = ''
     }

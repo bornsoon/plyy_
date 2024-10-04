@@ -1,9 +1,22 @@
-function tag(generate, update) {
-    dt = new Date();
+asof = 365
 
-    if (generate === update && (generate.getDate() - dt.getDate()) < 32) {
-        return 'new'
-    } else if ((update.getDate() - dt.getDate()) < 32) {
-        return 'update'
+function isTag(generate, update) {
+    now = new Date();
+    nowTime = Math.ceil(now.getTime() / (1000 * 60 * 60 * 24));
+    generate = new Date(generate);
+    genTime = Math.ceil(generate.getTime() / (1000 * 60 * 60 * 24));
+    if (update) {
+        update = new Date(update);
+        updateTime = Math.ceil(update.getTime() / (1000 * 60 * 60 * 24));
+    } else {
+        updateTime = 0;
+    };
+    if (!(update) && ((nowTime - genTime) < asof)) {
+        return 'NEW'
+    } else if ((nowTime - updateTime) < asof) {
+        return 'UPDATE'
+    };
+    if ((nowTime - genTime) < asof || (nowTime - updateTime) < asof) {
+        return 'True'
     }
 }

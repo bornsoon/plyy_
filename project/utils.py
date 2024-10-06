@@ -56,3 +56,13 @@ def change_nickname(id,nickname):
     except Exception as e:
         print(f"Error updating password: {e}")
         return False
+    
+def change_img(id,filename):
+    query = 'UPDATE USER SET img = ? WHERE id = ?'
+    params = (filename, id)
+    try:
+        db.update_query(query, params)
+        return True
+    except Exception as e:
+        print(f"Error updating password: {e}")
+        return False

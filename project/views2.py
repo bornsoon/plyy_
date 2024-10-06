@@ -22,6 +22,11 @@ def like():
     return render_template('like.html')
 
 
+@main.route('/notification')
+def notification():
+    return render_template('notification.html')
+
+
 @plyy.route('/<id>')
 def plyy_detail(id):
     return render_template('plyy.html')
@@ -101,6 +106,12 @@ def like_curator():
     result = curator_query('uid', id)
     return jsonify(result)
 
+@api_main.route('/notifiction')
+def api_notification():
+    id = session['id']
+    result = plyy_query('uid', id)
+    result += curator_query('uid', id)
+    return jsonify(result)
 
 @api_main.route('/curator')
 def api_main_curator():

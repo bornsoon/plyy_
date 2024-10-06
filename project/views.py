@@ -1,7 +1,7 @@
 # views.py
 from flask import Blueprint, request, session, render_template, redirect, url_for, jsonify
 from models import curator_info, curatorlike_status, curator_like, curator_unlike, plyy_like, plyy_unlike, plyylike_status, cu_plyy
-from utils import extract_user, user_sign, user_signup, user_sign_aka, current_pw, change_pw, change_nickname
+from utils import extract_user, user_sign, user_signup, user_sign_aka, current_pw, change_pw, change_nickname, change_img
 import database as db
 import os
 # from app import app
@@ -36,10 +36,14 @@ def login_view():
     if request.method == 'POST':
         Id = request.form['userid']
         Pw = request.form['userpw']
-        user = db.get_query('SELECT id, email, pw, nickname FROM USER WHERE email = ? and pw = ?', (Id, Pw),mul=False)
+        user = db.get_query('SELECT id, email, pw, nickname, img FROM USER WHERE email = ? and pw = ?', (Id, Pw),mul=False)
         if user:
             session['id'] = user['id']
             session['nickname'] = user['nickname']
+            if user['img']:
+                session['img'] = user['img']
+            else:
+                session['img'] ='U.jpg'
             return redirect(url_for('main.index'))
         else:
             session['id'] = None
@@ -51,6 +55,7 @@ def login_view():
 def logout_view():
     session.pop('id', None)
     session.pop('nickname',None)
+    session.pop('img',None)
     return redirect(url_for('main.index'))
 
 @mypage.route('/mypage')
@@ -61,17 +66,21 @@ def mypage_view():
 
 @mypage_edit.route('/edit')
 def edit_view():
+    if not session:
+        return redirect(url_for('login.login_view'))
     return render_template('test_mypage_edit.html')
 
-@mypage_edit_img.route('/api/img', methods=['POST'])
+@mypage_edit_img.route('/api_img', methods=['POST'])
 def upload_file():
     file = request.files['file']
     if file:
-        filepath = os.path.join('static/cardimage', file.filename)  ######## app.config
+        user_id = session.get('id')
+        filepath = os.path.join('static/cardimage/', f'U{user_id}.jpg')  ######## app.config
         file.save(filepath)
-        return "<H1>파일 저장 완료</H1>"
+        change_img(id, file.filename)
+        return redirect(url_for('mypage_edit.edit_view'))
     else:
-        return "<H1>파일 없음!!</H1>"
+        return jsonify({'success': False})
 
 @mypage_edit_currentpw.route('/api/pw', methods=['POST'])
 def mypage_pw():

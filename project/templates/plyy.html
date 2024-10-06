@@ -31,6 +31,10 @@
         </div>
     </div>
 
+    <!-- 위로가기 화살표 플로팅 아이콘 -->
+    <div class="fixed-floating-rb"><button class="btn__main__arrow" aria-label="메인에서 위로가기"></button></div>
+    
+
     <div id="tost_message">URL이 복사되었습니다!</div>
 
     <div id="logineed" class="modal hide" style="text-align: center;">
@@ -50,6 +54,7 @@
 
 {% block script %}
     <script src="/static/js/Pdetailike.js"></script>
+    <script src="/static//js/scrollTop.js"></script>
     <script>    
         let playlistLikeStates = {}; // 플레이리스트 좋아요 상태
 

@@ -48,7 +48,11 @@
         <button class="btn confirm" onclick="window.location.href='/login'">확인</button>
         <button class="btn cancel" onclick="closeModal()">취소</button>
     </div>
+    
 </div>
+
+<!-- 위로가기 화살표 플로팅 아이콘 -->
+<div class="fixed-floating-rb"><button class="btn__main__arrow" aria-label="메인에서 위로가기"></button></div>
 
 
 {% endblock %}
@@ -60,6 +64,7 @@
     <script src="/static/js/tag.js"></script>
     <script src="/static/js/plike.js"></script>
     <script src="/static/js/cfloating.js"></script>
+    <script src="/static/js/scrollTop.js"></script>
     <script>
         let curatorLikeStates = {}; // 큐레이터 좋아요 상태
         let playlistLikeStates = {}; // 플레이리스트 좋아요 상태

@@ -22,9 +22,8 @@
         {% block tab %}
             <!-- 메인 검색결과 탭 -->
             <div>
-                <div class="tab-type3 align left" onclick="location.href='/'">
-                    <div><button class="btn__arrow-left--white"></button></div>
-                    <div><button class="h2">In plyy,</button></div>
+                <div class="tab-type3 align left">
+                    <div><button class="h2" id="search-word"></button></div>
                 </div>
             </div>
 
@@ -46,7 +45,7 @@
         <div id="session-data" data-session-id="{{ session['id'] }}" style="display: none;"></div>
 
         <!-- 메인화면 화살표 플로팅 아이콘 -->
-        <div class="fixed-floating"><button class="btn__main__arrow" aria-label="메인에서 위로가기"></button></div>
+        <div class="fixed-floating-rb"><button class="btn__main__arrow" aria-label="메인에서 위로가기"></button></div>
     {% endblock %}
     
 {% endblock %}
@@ -76,7 +75,6 @@
         let query = url.get('q');
         const formBox = document.forms['form-box'];
         searchInput.value = query;
-
         
         document.addEventListener('DOMContentLoaded', function() {
             fetchTag();
@@ -131,6 +129,9 @@
 {% block script %}
     {% block script1 %}{% endblock %} 
     <script>
+        const searchTab = document.getElementById('search-word');
+        searchTab.innerHTML = `<span style="color: #8DD01A">'${query}'</span>` + "&nbsp;" + " 검색결과";
+
         plyyTab.addEventListener('click', function(event){
             searchInput.value = query;
             document.title = 'PLYY | Search PLYY';

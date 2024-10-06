@@ -14,7 +14,7 @@
                 <!-- 마이페이지 프로필 -->
                 <div class="mypage-profile">
                     <div class="mypage-profile__img">
-                        <img id="profile-img" src="" alt="" class="">
+                        <img id="profile-img">
                     </div>
                     <span id="profile-name" class="h1"></span>
                 </div>
@@ -63,7 +63,7 @@
         // 서버 측에서 템플릿 변수를 JavaScript 변수로 설정
         const userId = "{{ session.id }}";
         const userNickname = "{{ session.nickname }}";
-        console.log(userNickname)
+
         // 동적으로 이미지와 이름을 설정하는 함수
         function updateProfile() {
             const profileImg = document.getElementById('profile-img');
@@ -71,7 +71,7 @@
 
             // 이미지 URL 설정
             if (profileImg) {
-                profileImg.src = `/static/cardimage/U${userId}.jpg`;
+                profileImg.src = `/static/cardimage/{{ session.img }}`;
             }
 
             // 이름 설정

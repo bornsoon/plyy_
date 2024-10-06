@@ -14,7 +14,7 @@
             <ul class="edit-info">
                 <li class="edit-info__profile">
                     <a href="" class="align both"  onclick="showProfileModal(event)">
-                        <img id="profile-img" src="" alt="" class="">
+                        <img id="profile-img">
                         <button class="btn__arrow-right"></button>
                     </a>
                 </li>
@@ -50,21 +50,23 @@
             </ul>
 
              <!-- 프로필 이미지 업로드 모달 -->
-             <div id="" class="modal hide">
+             <div id="profile-modal" class="modal hide">
                 <div class="modal__title">
                     <span class="fs20">프로필 이미지 변경</span>
                 </div>
-                <div class="modal__text">
-                    <span class="fs14">현재 비밀번호를 입력해주세요.</span>
-                    <form id="current-pw-form" action="">
-                        <input type="password" id="current-pw" class="fs14" placeholder="비밀번호 확인">
-                        <p id="current-pw-error" class="fs14 hide">비밀번호가 올바르지 않습니다.</p>
-                    </form>
-                </div>
-                <div class="modal__btns align both">
-                    <button class="btn confirm" onclick="verifyCurrentPassword()">확인</button>
-                    <button class="btn cancel" onclick="closeCurrentPwModal()">취소</button>
-                </div>
+                <form action="/api_img" method="POST" enctype="multipart/form-data">
+                    <div class="edit-info__profile">
+                        <label for="file">
+                            <div class="btn-plus"></div>
+                        </label>
+                        <input type="file" name="file">
+                        <p id="img-error" class="fs14 hide">파일을 선택해주세요.</p>
+                    </div>
+                    <div class="modal__btns align both">
+                        <button class="btn confirm">저장</button>
+                        <button class="btn cancel" onclick="closeProfileModal()">취소</button>
+                    </div>
+                </form>
             </div>
 
             <!-- 로그아웃 클릭시 노출시킬 모달 -->
@@ -198,6 +200,7 @@
         document.getElementById('current-nickname').value = userNickname;
         }
 
+// onClick 외에도 엔터키로도 submit하려면 이벤트 처리 해줘야 함
 
         // 닉네임 변경 모달 표시 함수
         function showNicknameModal(event) {
@@ -211,7 +214,6 @@
             modal.style.transform = 'translate(-50%, -50%)'; // 중앙 정렬
         }
         setInputValue();
-
 
 
         async function validateNickname() {
@@ -318,7 +320,7 @@
 
             // 이미지 URL 설정
             if (profileImg) {
-                profileImg.src = `/static/cardimage/U${userId}.jpg`;
+                profileImg.src = `/static/cardimage/{{ session.img }}`;
             }
 
             // 이름 설정
@@ -354,22 +356,23 @@
 
         // 비밀번호 변경 모달 표시 함수
         function changePw(event) {
-                event.preventDefault();
-                const modal = document.getElementById('change-pw1');
-                if (modal) {
-                    modal.classList.remove('hide');
-                    modal.style.display = 'flex'; // 모달을 화면에 표시
-                    modal.style.position = 'fixed';
-                    modal.style.top = '45%'; // 화면 중앙에 위치
-                    modal.style.left = '50%'; // 화면 중앙에 위치
-                    modal.style.transform = 'translate(-50%, -50%)'; // 중앙 정렬
-                } else {
-                    console.error('비밀번호 변경 모달을 찾을 수 없습니다.');
-                }
+            event.preventDefault();
+            const modal = document.getElementById('change-pw1');
+            if (modal) {
+                modal.classList.remove('hide');
+                modal.style.display = 'flex'; // 모달을 화면에 표시
+                modal.style.position = 'fixed';
+                modal.style.top = '45%'; // 화면 중앙에 위치
+                modal.style.left = '50%'; // 화면 중앙에 위치
+                modal.style.transform = 'translate(-50%, -50%)'; // 중앙 정렬
+            } else {
+                console.error('비밀번호 변경 모달을 찾을 수 없습니다.');
             }
+        }
 
         // 현재 비밀번호 확인 API 호출 및 모달 표시 함수
         function verifyCurrentPassword() {
+            console.log(111111)
             const currentPw = document.getElementById('current-pw').value;
             fetch('/api/pw', {
                 method: 'POST',
@@ -401,109 +404,125 @@
             });
         }
 
-            // 현재 비밀번호 확인 모달 닫기
-            function closeCurrentPwModal() {
-                document.getElementById('change-pw1').classList.add('hide');
-            }
+        // 현재 비밀번호 확인 모달 닫기
+        function closeCurrentPwModal() {
+            document.getElementById('change-pw1').classList.add('hide');
+        }
 
-            // 비밀번호 변경 모달 닫기
-            function closeNewPwModal() {
+        // 비밀번호 변경 모달 닫기
+        function closeNewPwModal() {
+            document.getElementById('change-pw2').classList.add('hide');
+        }
+
+
+        // 비밀번호 형식 검증 함수
+        function validatePassword(password) {
+            // 비밀번호가 8자리 이상이며 특수문자가 포함되어 있는지 검사
+            const passwordPattern = /^(?=.*[!@#$%^&*])[A-Za-z\d@$!%*?&]{8,}$/;
+            return passwordPattern.test(password);
+        }
+
+        // 비밀번호 확인 후 유효성 검사 함수
+        function checkNewPassword() {
+            const newPassword = document.getElementById('new-pw').value;
+
+            if (validatePassword(newPassword)) {
+                // 비밀번호가 유효하면 비밀번호 변경 확인 모달 표시
                 document.getElementById('change-pw2').classList.add('hide');
+                const modal = document.getElementById('change-pw3');
+                modal.classList.remove('hide');
+                modal.style.display = 'flex'; // 모달을 화면에 표시
+                modal.style.position = 'fixed';
+                modal.style.top = '45%'; // 화면 중앙에 위치
+                modal.style.left = '50%'; // 화면 중앙에 위치
+                modal.style.transform = 'translate(-50%, -50%)'; // 중앙 정렬
+            } else {
+                // 비밀번호가 유효하지 않으면 비밀번호 형식 불일치 메시지 표시
+                document.getElementById('new-pw-error').classList.remove('hide');
+                document.querySelector('#change-pw2 .modal__text').classList.add('modal__text--invalid');
             }
+        }
+
+        // 비밀번호 변경 확인 모달에서 확인 버튼 클릭 시
+        document.querySelector('#change-pw3 .btn.confirm').addEventListener('click', function() {
+            const newPassword = document.querySelector('#new-pw').value;
+            const confirmPassword = document.querySelector('#change-pw3 input[type="password"]').value;
+            
+            // 비밀번호 일치 여부 확인
+            if (newPassword === confirmPassword) {
+                // 비밀번호를 서버에 전송하여 변경 요청
+                fetch('/api/change-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ newPassword: newPassword })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // 비밀번호 변경 성공 처리
+                        closeNewPwModal(); // 모달 닫기
+                        document.getElementById('change-pw3').classList.add('hide'); // 확인 모달 닫기
+                        const modal = document.getElementById('change-pw4');
+                        modal.classList.remove('hide');
+                        modal.style.display = 'flex'; // 모달을 화면에 표시
+                        modal.style.position = 'fixed';
+                        modal.style.top = '45%'; // 화면 중앙에 위치
+                        modal.style.left = '50%'; // 화면 중앙에 위치
+                        modal.style.transform = 'translate(-50%, -50%)'; // 중앙 정렬
+
+                    } else {
+                        // 비밀번호 변경 실패 처리
+                        alert('비밀번호 변경에 실패했습니다.');
+                    }
+                })
+                .catch(error => {
+                    console.error('비밀번호 변경 중 오류 발생:', error);
+                });
+            } else {
+                // 비밀번호가 일치하지 않을 경우 오류 메시지 표시
+                const errorMsg = document.querySelector('#change-pw3 .fs14');
+                errorMsg.textContent = '입력한 비밀번호가 일치하지 않습니다.';
+                document.querySelector('#change-pw3 .modal__text').classList.add('modal__text--invalid');
+                errorMsg.classList.remove('hide');
 
 
-            // 비밀번호 형식 검증 함수
-            function validatePassword(password) {
-                // 비밀번호가 8자리 이상이며 특수문자가 포함되어 있는지 검사
-                const passwordPattern = /^(?=.*[!@#$%^&*])[A-Za-z\d@$!%*?&]{8,}$/;
-                return passwordPattern.test(password);
             }
+        });
 
-            // 비밀번호 확인 후 유효성 검사 함수
-            function checkNewPassword() {
-                const newPassword = document.getElementById('new-pw').value;
+        // 비밀번호 변경 확인 모달에서 취소 버튼 클릭 시
+        document.querySelector('#change-pw3 .btn.cancel').addEventListener('click', function() {
+            document.getElementById('change-pw3').classList.add('hide');
+        });
 
-                if (validatePassword(newPassword)) {
-                    // 비밀번호가 유효하면 비밀번호 변경 확인 모달 표시
-                    document.getElementById('change-pw2').classList.add('hide');
-                    const modal = document.getElementById('change-pw3');
-                    modal.classList.remove('hide');
-                    modal.style.display = 'flex'; // 모달을 화면에 표시
-                    modal.style.position = 'fixed';
-                    modal.style.top = '45%'; // 화면 중앙에 위치
-                    modal.style.left = '50%'; // 화면 중앙에 위치
-                    modal.style.transform = 'translate(-50%, -50%)'; // 중앙 정렬
-                } else {
-                    // 비밀번호가 유효하지 않으면 비밀번호 형식 불일치 메시지 표시
-                    document.getElementById('new-pw-error').classList.remove('hide');
-                    document.querySelector('#change-pw2 .modal__text').classList.add('modal__text--invalid');
-                }
-            }
+        // 비밀번호 성공 확인 버튼 클릭 시
+        document.querySelector('#change-pw4 .btn.confirm').addEventListener('click', function() {
+            document.getElementById('change-pw4').classList.add('hide');
+        });
 
-            // 비밀번호 변경 확인 모달에서 확인 버튼 클릭 시
-            document.querySelector('#change-pw3 .btn.confirm').addEventListener('click', function() {
-                const newPassword = document.querySelector('#new-pw').value;
-                const confirmPassword = document.querySelector('#change-pw3 input[type="password"]').value;
-                
-                // 비밀번호 일치 여부 확인
-                if (newPassword === confirmPassword) {
-                    // 비밀번호를 서버에 전송하여 변경 요청
-                    fetch('/api/change-password', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ newPassword: newPassword })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            // 비밀번호 변경 성공 처리
-                            closeNewPwModal(); // 모달 닫기
-                            document.getElementById('change-pw3').classList.add('hide'); // 확인 모달 닫기
-                            const modal = document.getElementById('change-pw4');
-                            modal.classList.remove('hide');
-                            modal.style.display = 'flex'; // 모달을 화면에 표시
-                            modal.style.position = 'fixed';
-                            modal.style.top = '45%'; // 화면 중앙에 위치
-                            modal.style.left = '50%'; // 화면 중앙에 위치
-                            modal.style.transform = 'translate(-50%, -50%)'; // 중앙 정렬
+        // 닉네임 변경 성공 확인 버튼 클릭 시
+        document.querySelector('#success-nickname .btn.confirm').addEventListener('click', function() {
+        document.getElementById('success-nickname').classList.add('hide');
+        });
 
-                        } else {
-                            // 비밀번호 변경 실패 처리
-                            alert('비밀번호 변경에 실패했습니다.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('비밀번호 변경 중 오류 발생:', error);
-                    });
-                } else {
-                    // 비밀번호가 일치하지 않을 경우 오류 메시지 표시
-                    const errorMsg = document.querySelector('#change-pw3 .fs14');
-                    errorMsg.textContent = '입력한 비밀번호가 일치하지 않습니다.';
-                    document.querySelector('#change-pw3 .modal__text').classList.add('modal__text--invalid');
-                    errorMsg.classList.remove('hide');
+        // 프로필 변경 모달 표시 함수
+        function showProfileModal(event) {
+            event.preventDefault();
+            modal = document.getElementById('profile-modal')
+            modal.classList.remove('hide');
+            modal.style.display = 'flex'; // 모달을 화면에 표시
+            modal.style.position = 'fixed';
+            modal.style.top = '45%'; // 화면 중앙에 위치
+            modal.style.left = '50%'; // 화면 중앙에 위치
+            modal.style.transform = 'translate(-50%, -50%)'; // 중앙 정렬
+        };
 
-
-                }
-            });
-
-            // 비밀번호 변경 확인 모달에서 취소 버튼 클릭 시
-            document.querySelector('#change-pw3 .btn.cancel').addEventListener('click', function() {
-                document.getElementById('change-pw3').classList.add('hide');
-            });
-
-            // 비밀번호 성공 확인 버튼 클릭 시
-            document.querySelector('#change-pw4 .btn.confirm').addEventListener('click', function() {
-                document.getElementById('change-pw4').classList.add('hide');
-            });
-
-            // 닉네임 변경 성공 확인 버튼 클릭 시
-            document.querySelector('#success-nickname .btn.confirm').addEventListener('click', function() {
-            document.getElementById('success-nickname').classList.add('hide');
-            });
-
-
+        // 프로필 변경 모달 닫기
+        function closeProfileModal() {
+            document.getElementById('profile-modal').classList.add('hide');
+        };
+        
     </script>
 
 {% endblock %}

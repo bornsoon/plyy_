@@ -5,7 +5,7 @@ app = Flask(__name__)
 app.secret_key = 'plyy_page'
 app.permanent_session_lifetime = timedelta(minutes=30)
 
-from views import logout, mypage, mypage_edit, mypage_edit_currentpw, mypage_edit_changepw, mypage_edit_nickname, login, curator, api_curator, like_curator, unlike_curator, like_plyy, unlike_plyy, signup, signup_email, signup_nickname, signup_final 
+from views import logout, mypage, mypage_edit, mypage_edit_img, mypage_edit_currentpw, mypage_edit_changepw, mypage_edit_nickname, login, curator, api_curator, like_curator, unlike_curator, like_plyy, unlike_plyy, signup, signup_email, signup_nickname, signup_final 
 from views2 import main, plyy, search, api_main, api_plyy, api_c_plyy, api_search, api_like
 
 app.register_blueprint(main, url_prefix='/')
@@ -27,6 +27,7 @@ app.register_blueprint(mypage_edit, url_prefix='/')
 app.register_blueprint(mypage_edit_currentpw, url_prefix='/')
 app.register_blueprint(mypage_edit_changepw, url_prefix='/')
 app.register_blueprint(mypage_edit_nickname, url_prefix='/')
+app.register_blueprint(mypage_edit_img, url_prefix='/')
 app.register_blueprint(curator, url_prefix='/')
 app.register_blueprint(api_curator, url_prefix='/')
 app.register_blueprint(like_curator, url_prefix='/')

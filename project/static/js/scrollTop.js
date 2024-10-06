@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const scrollToTopButton = document.querySelector('.fixed-floating .btn__main__arrow');
+    const scrollToTopButton = document.querySelector('.fixed-floating-rb .btn__main__arrow');
 
     // Scroll to top on button click
     scrollToTopButton.addEventListener('click', () => {

@@ -23,8 +23,9 @@
         <!-- 로그인 정보를 포함한 hidden element 추가 -->
         <div id="session-data" data-session-id="{{ session['id'] }}" style="display: none;"></div>
         
-        <!-- 메인화면 화살표 플로팅 아이콘 -->
-        <div class="fixed-floating"><button class="btn__main__arrow" aria-label="메인에서 위로가기"></button></div>
+        <!-- 위로가기 화살표 플로팅 아이콘 -->
+        <div class="fixed-floating-rb"><button class="btn__main__arrow" aria-label="메인에서 위로가기"></button></div>
+    
     {% endblock %}
     
 {% endblock %}
@@ -57,7 +58,9 @@
 
 
 {% block script %}
+    <script src="/static/js/scrollTop.js"></script>
     <script>
+        
         let id = '';
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -90,6 +93,5 @@
             plyyTab.classList.add('tab-type1--deactive');
         });
     </script>
-    <script src="/static/js/scrollTop.js"></script>
 
 {% endblock %}

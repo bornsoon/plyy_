@@ -288,6 +288,12 @@ body {
   object-fit: fit;
 }
 
+.btn-plus {
+  background: url(../images/ico__plus.svg) no-repeat center;
+  width: 12rem;
+  height: 12rem;
+}
+
 .btn__arrow-right {
   background: url(../images/btn__arrow-left--white.svg) no-repeat center;
   width: 2.4rem;
@@ -845,6 +851,14 @@ input:not([type=checkbox], [type=radio])[readonly] {
   margin-bottom: 3.2rem;
 }
 
+.fixed-floating-rb {
+  position: fixed;
+  display: flex;
+  right: 3.2rem;
+  bottom: 3.2rem;
+}
+
+
 .floating-plyy {
   display: flex;
   justify-content: center;
@@ -933,6 +947,7 @@ input:not([type=checkbox], [type=radio])[readonly] {
 }
 
 .modal {
+  z-index: 10;
   display: flex;
   flex-direction: column;
   justify-content: center;

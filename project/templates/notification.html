@@ -1,0 +1,61 @@
+{% extends "base_footer.html" %}
+
+{% block container %}
+    {% block search %}
+        {% block tab %}
+    <!-- 메인 검색결과 탭 -->
+    <div>
+        <div class="tab-type3 align left" onclick="location.href='/'">
+            <div><button class="btn__arrow-left--white"></button></div>
+            <div><button class="h2">Notification</button></div>
+        </div>
+    </div>
+
+    {% endblock %}
+        <ul c lass="edit-info" id="note-lst">
+            <li class="edit-info__list">
+                <a href="" class="align both" onclick="showNicknameModal(event)">
+                    <div class="edit-info__list__detail">
+                        <span class="fs20">내가 좋아하는 큐레이터가 새로운 플레이리스트를 등록했습니다.</span>
+                        <span id="profile-name" class="fs20"></span>
+                    </div>
+                    <button class="btn__arrow-right"></button>
+                </a>
+            </li>
+        </ul>
+        
+        <!-- 위로가기 화살표 플로팅 아이콘 -->
+        <div class="fixed-floating-rb"><button class="btn__main__arrow" aria-label="메인에서 위로가기"></button></div>
+    
+    {% endblock %}
+    
+
+    
+{% endblock %}
+
+
+
+{% block script %}
+    <script src="/static/js/scrollTop.js"></script>
+    <script>
+        let id = '';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            let url = window.location.href;
+            url = url.split('/');
+            id = url[url.length - 1];
+            document.title =  'Notification | PLYY';
+        });
+
+        function fetchNotification(id) {
+            fetch('/api/notyfication')
+            .then(response =>  response.json())
+            .then(data => {    
+                console.log(data)
+            })
+            .catch(error => console.error('데이터를 처리하는 과정에서 오류가 발생하였습니다.'))
+        };
+
+    </script>
+
+{% endblock %}
